@@ -1,9 +1,10 @@
 [#ftl]
 [@b.head/]
-[@b.toolbar title="毕业班成绩单打印"/]
+[@b.toolbar title="二学位申请管理"/]
 <div class="search-container">
   <div class="search-panel">
       [@b.form name="searchForm" action="!search" title="ui.searchForm" target="listFrame" theme="search"]
+       <input type="hidden" name="orderBy" value="degree2ndApply.updatedAt desc"/>
      [#include "searchForm.ftl"/]
      [/@]
   </div>

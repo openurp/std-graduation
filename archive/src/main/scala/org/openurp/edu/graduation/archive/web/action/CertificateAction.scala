@@ -20,12 +20,14 @@ package org.openurp.edu.graduation.archive.web.action
 
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.context.Params
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
 import org.openurp.edu.base.model.{Squad, Student}
-import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.graduation.archive.web.helper.GraduateStatHelper
+import org.openurp.edu.web.ProjectSupport
+import org.openurp.edu.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.edu.graduation.audit.model.{GraduateResult, GraduateSession}
 import org.openurp.edu.student.info.model.Graduation
 
@@ -43,16 +45,26 @@ class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport
   }
 
   def report: View = {
-    val helper = new GraduateStatHelper(entityDao)
-    helper.passed = Some(true)
-    helper.statBySquad()
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batch", ""))
+    val rs = helper.statCertificate(session, batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
     forward()
   }
 
   def search: View = {
-    val helper = new GraduateStatHelper(entityDao)
-    helper.passed = Some(true)
-    helper.statBySquad()
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batch", ""))
+    val rs = helper.statCertificate(session, batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
     forward()
   }
 

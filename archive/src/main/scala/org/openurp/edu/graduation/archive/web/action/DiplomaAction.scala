@@ -20,12 +20,14 @@ package org.openurp.edu.graduation.archive.web.action
 
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.webmvc.api.context.Params
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
 import org.openurp.edu.base.model.{Squad, Student}
-import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.graduation.archive.web.helper.DegreeStatHelper
+import org.openurp.edu.web.ProjectSupport
+import org.openurp.edu.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.edu.graduation.audit.model.{DegreeResult, GraduateSession}
 import org.openurp.edu.student.info.model.Graduation
 
@@ -43,12 +45,26 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
   }
 
   def report: View = {
-    new DegreeStatHelper(entityDao).statBySquad()
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batch", ""))
+    val rs = helper.statDiploma(session, batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
     forward()
   }
 
   def search: View = {
-    new DegreeStatHelper(entityDao).statBySquad()
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batch", ""))
+    val rs = helper.statDiploma(session, batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
     forward()
   }
 
@@ -57,6 +73,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     val squadIds = longIds("squad")
     val query: OqlBuilder[DegreeResult] = OqlBuilder.from(classOf[DegreeResult], "ar")
       .where("ar.session.id=:sessionId", sessionId)
+      .where("ar.passed=true")
     query.join("ar.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)
     val ars = entityDao.search(query)

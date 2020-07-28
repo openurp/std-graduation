@@ -16,8 +16,8 @@
          <td width="6%">姓名</td>
          <td width="4%">性别</td>
          <td width="7%">出生日期</td>
-         <td width="21%">证件号码</td>
          <td width="21%">毕业证书号</td>
+         <td width="21%">学位证书号</td>
          <td width="9%">电话</td>
          <td width="9%">签收</td>
          <td width="9%">日期</td>
@@ -31,8 +31,8 @@
          <td>${ar.std.user.name}</td>
          <td>${ar.std.person.gender.name}</td>
          <td>${(ar.std.person.birthday?string('yyyyMMdd'))!}</td>
-         <td>${(ar.std.person.code)!}</td>
-         <td>${(graduationMap.get(ar.std).code)!}</td>
+         <td>${(graduationMap.get(ar.std).code)!'--'}</td>
+         <td>${(graduationMap.get(ar.std).diplomaNo)!'--'}</td>
          <td></td>
          <td></td>
          <td></td>

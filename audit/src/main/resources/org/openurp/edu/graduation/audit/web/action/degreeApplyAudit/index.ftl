@@ -1,18 +1,17 @@
 [#ftl]
 [@b.head/]
 [@b.toolbar title="学位申请管理"/]
-   <table width="100%"  class="indexpanel" height="89%">
-    <tr>
-     <td valign="top"  style="width:180px" class="index_view">
+<div class="search-container">
+  <div class="search-panel">
       [@b.form name="searchForm" action="!search" title="ui.searchForm" target="listFrame" theme="search"]
+       <input type="hidden" name="orderBy" value="degreeApply.updatedAt desc"/>
      [#include "searchForm.ftl"/]
      [/@]
-     </td>
-     <td valign="top">
+  </div>
+  <div class="search-list">
      [@b.div id="listFrame"/]
-     </td>
-    </tr>
-  <table>
+  </div>
+</div>
  <script>
   var form = document.searchForm;
   function search(pageNo,pageSize,orderBy){

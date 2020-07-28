@@ -16,16 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.graduation.audit.web.action
+package org.openurp.edu.graduation.degree2nd.model
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.data.model.LongId
+import org.beangle.data.model.pojo.Updated
+import org.openurp.edu.base.model.Student
+import org.openurp.edu.graduation.audit.model.GraduateSession
 
-class DefaultModule extends BindModule {
+class Degree2ndApply extends LongId with Updated {
 
-  override protected def binding(): Unit = {
-    bind(classOf[StdDegreeApplyAction])
-    bind(classOf[DegreeApplyAuditAction])
-    bind(classOf[Degree2ndApplyAction])
-    bind(classOf[StdDegree2ndApplyAction])
-  }
+  var session: GraduateSession = _
+
+  var std: Student = _
+
+  var gpa: Float = _
+
+  var gradeDetail: String = _
 }
+

@@ -44,6 +44,11 @@
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.openurp.edu.grade</groupId>
+      <artifactId>openurp-edu-grade-core</artifactId>
+      <version>${openurp.edu.grade.version}</version>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>

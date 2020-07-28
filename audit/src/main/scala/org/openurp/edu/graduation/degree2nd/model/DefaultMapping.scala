@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.edu.graduation.audit.web.action
+package org.openurp.edu.graduation.degree2nd.model
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.data.orm.{IdGenerator, MappingModule}
 
-class DefaultModule extends BindModule {
-
-  override protected def binding(): Unit = {
-    bind(classOf[StdDegreeApplyAction])
-    bind(classOf[DegreeApplyAuditAction])
-    bind(classOf[Degree2ndApplyAction])
-    bind(classOf[StdDegree2ndApplyAction])
+class DefaultMapping extends MappingModule {
+  override def binding(): Unit = {
+    bind[Degree2ndApply] declare { e =>
+      e.gradeDetail is length(2000)
+    }
   }
 }

@@ -22,33 +22,32 @@ import java.time.Instant
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
-import org.beangle.webmvc.api.annotation.{mapping, param}
-import org.beangle.webmvc.api.view.{Status, View}
+import org.beangle.webmvc.api.annotation.mapping
+import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
 import org.openurp.edu.base.model.Student
-import org.openurp.edu.graduation.audit.model.{DegreeApply, DegreeResult, GraduateSession}
-import org.openurp.edu.graduation.audit.web.helper.DocHelper
-import org.openurp.edu.program.domain.ProgramProvider
+import org.openurp.edu.grade.course.service.impl.BestGradeFilter
+import org.openurp.edu.graduation.audit.model.{GraduateResult, GraduateSession}
+import org.openurp.edu.graduation.degree2nd.model.Degree2ndApply
 import org.openurp.edu.web.ProjectSupport
 
-class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport {
+class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectSupport {
 
-  var programProvider: ProgramProvider = _
+  var bestGradeFilter: BestGradeFilter = _
 
   def index(): View = {
     val student = getStudent
-    val grs = getDegreeResult(student, None)
-    put("program", programProvider.getProgram(student))
+    val grs = getGraduateResult(student, None)
     grs match {
       case Some(gr) =>
-        val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
+        val daQuery = OqlBuilder.from(classOf[Degree2ndApply], "da")
         daQuery.where("da.std=:std and da.session=:session", student, gr.session)
         entityDao.search(daQuery).headOption match {
           case Some(da) =>
-            put("degreeApply", da)
+            put("degree2ndApply", da)
             forward()
           case None =>
-            put("degreeResult", gr)
+            put("graduateResult", gr)
             forward("welcome")
         }
       case None =>
@@ -56,66 +55,44 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     }
   }
 
-  private def getDegreeResult(std: Student, session: Option[GraduateSession]): Option[DegreeResult] = {
-    val builder = OqlBuilder.from(classOf[DegreeResult], "dr")
-    builder.where("dr.std=:std", std)
-    builder.where("dr.passed=true")
+  private def getGraduateResult(std: Student, session: Option[GraduateSession]): Option[GraduateResult] = {
+    val builder = OqlBuilder.from(classOf[GraduateResult], "gr")
+    builder.where("gr.std=:std", std)
+    //builder.where("gr.passed=true")
     session foreach { s =>
-      builder.where("dr.session=:session", s)
+      builder.where("gr.session=:session", s)
     }
-    //builder.where("not exists(from " + classOf[Graduation].getName + " g where g.std=dr.std and g.degree is not null)")
-    builder.orderBy("dr.session.graduateOn desc")
+    builder.orderBy("gr.session.graduateOn desc")
     entityDao.search(builder).headOption
   }
 
   def apply(): View = {
     val student = getStudent
     val session = entityDao.get(classOf[GraduateSession], longId("session"))
-    val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
+    val daQuery = OqlBuilder.from(classOf[Degree2ndApply], "da")
     daQuery.where("da.std=:std and da.session=:session", student, session)
     val da = entityDao.search(daQuery).headOption match {
       case Some(da) => da
       case None =>
-        val da = new DegreeApply
+        val da = new Degree2ndApply
         da.session = session
         da.std = student
-        da.degree = programProvider.getProgram(student).get.degree.get
         da
     }
-    getDegreeResult(student, Some(session)) foreach { dr =>
-      da.gpa = dr.gpa
-    }
+    val rs = new CommonGradeHelper(entityDao, bestGradeFilter).getGpaAndDetail(student)
+    da.gpa = rs._1
+    da.gradeDetail = rs._2
     da.updatedAt = Instant.now
     entityDao.saveOrUpdate(da)
     redirect("index", "info.save.success")
   }
 
-  @mapping("download/{id}")
-  def download(@param("id") id: String): View = {
-    val apply = entityDao.get(classOf[DegreeApply], id.toLong)
-    val std = getStudent
-    if (std == apply.std) {
-      val bytes = DocHelper.toDoc(apply)
-      val title = s"${std.user.code}_${std.user.name}学位申请表"
-      val filename = new String(title.getBytes, "ISO8859-1")
-      response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
-      response.setHeader("Content-Length", bytes.length.toString)
-      val out = response.getOutputStream
-      out.write(bytes)
-      out.flush()
-      out.close()
-      null
-    } else {
-      Status.NotFound
-    }
-  }
-
   @mapping(method = "delete")
   def remove(): View = {
     val id = getLong("id").get
-    val da = entityDao.get(classOf[DegreeApply], id)
+    val da = entityDao.get(classOf[Degree2ndApply], id)
     val std = getStudent
-    if (da.std == std && !da.passed.getOrElse(false)) {
+    if (da.std == std) {
       entityDao.remove(da)
       redirect("index", "info.remove.success")
     } else {
@@ -128,5 +105,4 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     builder.where("s.user.code=:code", Securities.user)
     entityDao.search(builder).head
   }
-
 }

@@ -18,12 +18,15 @@
  */
 package org.openurp.edu.graduation.archive.web.action
 
+import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.security.Securities
 import org.beangle.webmvc.api.context.Params
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
-import org.openurp.edu.base.web.ProjectSupport
-import org.openurp.edu.graduation.archive.web.helper.GraduateStatHelper
+import org.openurp.base.model.User
+import org.openurp.edu.web.ProjectSupport
+import org.openurp.edu.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.edu.graduation.audit.model.{GraduateResult, GraduateSession}
 
 class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport {
@@ -38,7 +41,14 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
   }
 
   def search: View = {
-    new GraduateStatHelper(entityDao).statBySquad()
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batch", ""))
+    val rs = helper.statGraduate(session, getBoolean("passed"), batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
     forward()
   }
 
@@ -52,12 +62,16 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     Params.getBoolean("passed") foreach { f =>
       query.where("ar.passed=" + f.toString)
     }
-    Params.getInt("batch") foreach { batch =>
-      query.where("ar.batch=:batch", batch)
+    val batches = Strings.splitToInt(get("batch", ""))
+    if (batches.nonEmpty) {
+      query.where("ar.batch in  (:batches)", batches)
     }
     val grs = entityDao.search(query)
     put("grs", grs)
     put("graduateSession", entityDao.get(classOf[GraduateSession], sessionId))
+    val builder = OqlBuilder.from(classOf[User], "user")
+      .where(" user.code=:code", Securities.user)
+    put("user", entityDao.search(builder).headOption)
     forward()
   }
 }

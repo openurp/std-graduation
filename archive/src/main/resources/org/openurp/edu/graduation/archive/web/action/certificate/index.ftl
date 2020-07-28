@@ -1,18 +1,16 @@
 [#ftl]
 [@b.head/]
 [@b.toolbar title="毕业证书签收"/]
-   <table width="100%"  class="indexpanel" height="89%">
-    <tr>
-     <td valign="top"  style="width:180px" class="index_view">
+<div class="search-container">
+  <div class="search-panel">
       [@b.form name="searchForm" action="!search" title="ui.searchForm" target="listFrame" theme="search"]
      [#include "searchForm.ftl"/]
      [/@]
-     </td>
-     <td valign="top">
+  </div>
+  <div class="search-list">
      [@b.div id="listFrame"/]
-     </td>
-    </tr>
-  <table>
+  </div>
+</div>
  <script>
   var form = document.searchForm;
   function search(pageNo,pageSize,orderBy){
