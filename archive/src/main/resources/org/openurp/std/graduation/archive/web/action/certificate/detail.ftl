@@ -2,7 +2,7 @@
 [@b.head/]
 <div class="container">
   [#list squads as adc]
-    [#assign arLists = res[adc.id?string]?sort_by(["std","code"])?chunk(20)]
+    [#assign arLists = res[adc.id?string]?sort_by(["std","user","code"])?chunk(20)]
     [#assign arIndex=1]
     [#list arLists  as arList]
     <h4 width="100%" align="center" style="margin-bottom:5px">${adc.project.school.name }毕业文凭签收名册
