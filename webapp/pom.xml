@@ -2,38 +2,38 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.graduation</groupId>
-    <artifactId>openurp-edu-graduation-parent</artifactId>
+    <groupId>org.openurp.std.graduation</groupId>
+    <artifactId>openurp-std-graduation-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>openurp-edu-graduation-webapp</artifactId>
+  <artifactId>openurp-std-graduation-webapp</artifactId>
   <packaging>war</packaging>
   <name>OpenURP Edu Graduation Webapp</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.graduation.webapp</bundle.symbolicName>
+    <bundle.symbolicName>org.openurp.std.graduation.webapp</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.openurp.edu.graduation</groupId>
-      <artifactId>openurp-edu-graduation-web</artifactId>
+      <groupId>org.openurp.std.graduation</groupId>
+      <artifactId>openurp-std-graduation-web</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.graduation</groupId>
-      <artifactId>openurp-edu-graduation-audit</artifactId>
+      <groupId>org.openurp.std.graduation</groupId>
+      <artifactId>openurp-std-graduation-audit</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.graduation</groupId>
-      <artifactId>openurp-edu-graduation-archive</artifactId>
+      <groupId>org.openurp.std.graduation</groupId>
+      <artifactId>openurp-std-graduation-archive</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
   </dependencies>
 </project>

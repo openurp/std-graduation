@@ -2,16 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.openurp.edu.graduation</groupId>
-    <artifactId>openurp-edu-graduation-parent</artifactId>
+    <groupId>org.openurp.std.graduation</groupId>
+    <artifactId>openurp-std-graduation-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>openurp-edu-graduation-audit</artifactId>
+  <artifactId>openurp-std-graduation-audit</artifactId>
   <packaging>jar</packaging>
   <name>OpenURP Edu Graduation Audit</name>
 
   <properties>
-    <bundle.symbolicName>org.openurp.edu.graduation.audit</bundle.symbolicName>
+    <bundle.symbolicName>org.openurp.std.graduation.audit</bundle.symbolicName>
     <bundle.namespace>org.openurp</bundle.namespace>
   </properties>
 
@@ -29,18 +29,18 @@
     </dependency>
     -->
     <dependency>
-      <groupId>org.openurp.edu.graduation</groupId>
-      <artifactId>openurp-edu-graduation-web</artifactId>
+      <groupId>org.openurp.std.graduation</groupId>
+      <artifactId>openurp-std-graduation-web</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.graduation</groupId>
-      <artifactId>openurp-edu-graduation-api</artifactId>
+      <groupId>org.openurp.std</groupId>
+      <artifactId>openurp-std-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openurp.edu.student</groupId>
-      <artifactId>openurp-edu-student-api</artifactId>
+      <groupId>org.openurp.edu</groupId>
+      <artifactId>openurp-edu-api</artifactId>
       <version>${openurp.api.version}</version>
     </dependency>
     <dependency>
@@ -49,8 +49,8 @@
       <version>${openurp.edu.grade.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
   </dependencies>
 </project>
