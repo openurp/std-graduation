@@ -30,7 +30,7 @@ object DocHelper {
 
   def toDoc(apply: DegreeApply): Array[Byte] = {
     val data= ApplyDataConvertor.convert(apply)
-    val url = this.getClass.getResource("/org/openurp/edu/graduation/audit/degree_apply.docx")
+    val url = this.getClass.getResource("/org/openurp/std/graduation/audit/degree_apply.docx")
     DocHelper.toDoc(url, data)
   }
 
