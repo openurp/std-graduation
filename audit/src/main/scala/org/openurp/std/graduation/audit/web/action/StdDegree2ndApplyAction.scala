@@ -29,7 +29,7 @@ import org.openurp.base.edu.model.Student
 import org.openurp.edu.grade.course.service.impl.BestGradeFilter
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectSupport {
 

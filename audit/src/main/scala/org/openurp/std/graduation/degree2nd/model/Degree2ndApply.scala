@@ -33,4 +33,3 @@ class Degree2ndApply extends LongId with Updated {
 
   var gradeDetail: String = _
 }
-

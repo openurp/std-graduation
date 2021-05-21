@@ -21,7 +21,7 @@ package org.openurp.std.graduation.audit.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.edu.grade.course.service.impl.BestGradeFilter
 import org.openurp.std.graduation.model.GraduateSession
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply

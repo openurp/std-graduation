@@ -24,7 +24,7 @@ import org.beangle.webmvc.api.annotation.ignore
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.beangle.webmvc.entity.helper.PopulateHelper
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
 import org.openurp.std.graduation.audit.web.helper.{ApplyDataConvertor, DocHelper}
 

@@ -19,7 +19,6 @@
 package org.openurp.std.graduation.audit.web.action
 
 import java.time.Instant
-
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.security.Securities
 import org.beangle.webmvc.api.annotation.{mapping, param}
@@ -29,7 +28,7 @@ import org.openurp.base.edu.model.Student
 import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateSession}
 import org.openurp.std.graduation.audit.web.helper.DocHelper
 import org.openurp.edu.program.domain.ProgramProvider
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 
 class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport {
 

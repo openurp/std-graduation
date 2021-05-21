@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.4.10</version>
+    <version>0.4.12</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openurp.std.graduation</groupId>
@@ -12,10 +12,10 @@
   <name>OpenURP Edu Graduation Parent</name>
 
   <properties>
-    <openurp.api.version>0.22.1</openurp.api.version>
-    <openurp.boot.version>0.0.5</openurp.boot.version>
-    <openurp.base.version>0.1.17</openurp.base.version>
-    <openurp.edu.grade.version>0.0.13</openurp.edu.grade.version>
+    <openurp.api.version>0.22.2</openurp.api.version>
+    <openurp.starter.version>0.0.7</openurp.starter.version>
+    <openurp.base.version>0.1.18</openurp.base.version>
+    <openurp.edu.grade.version>0.0.14-SNAPSHOT</openurp.edu.grade.version>
   </properties>
 
   <modules>

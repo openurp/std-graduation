@@ -24,7 +24,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
 import org.openurp.base.edu.model.{Squad, Student}
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
 import org.openurp.std.info.model.Graduation
 
