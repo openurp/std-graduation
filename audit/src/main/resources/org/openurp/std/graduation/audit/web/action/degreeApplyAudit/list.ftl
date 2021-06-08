@@ -4,7 +4,7 @@
     [@b.gridbar]
       bar.addItem("单个下载", action.single("download",null,null,"_blank"));
       [#if degreeApplies.totalItems<300]
-      bar.addItem("导出申请表",action.exportData(null,null,'template=org/openurp/edu/graduation/audit/degree_apply.xlsx&fileName=学生学位申请表'));
+      bar.addItem("导出申请表",action.exportData(null,null,'template=org/openurp/std/graduation/audit/degree_apply.xlsx&fileName=学生学位申请表'));
       [/#if]
     [/@]
     [@b.row]
