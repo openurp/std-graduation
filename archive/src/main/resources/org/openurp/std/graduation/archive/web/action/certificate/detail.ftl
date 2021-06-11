@@ -5,7 +5,7 @@
     [#assign arLists = res[adc.id?string]?sort_by(["std","user","code"])?chunk(20)]
     [#assign arIndex=1]
     [#list arLists  as arList]
-    <h4 width="100%" align="center" style="margin-bottom:5px">${adc.project.school.name }毕业文凭签收名册
+    <h4 width="100%" align="center" style="margin-bottom:5px">${adc.project.school.name }学历、学位证书签收名册
        <br>${adc.department.name} ${adc.name}
     </h4>
     <table class="gridtable" align="center" style="border:1px">

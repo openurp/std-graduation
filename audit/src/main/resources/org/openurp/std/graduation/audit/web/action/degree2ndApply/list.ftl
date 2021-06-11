@@ -3,7 +3,7 @@
   [@b.grid items=degree2ndApplies var="degree2ndApply"]
     [@b.gridbar]
       bar.addItem("查看", action.info());
-      bar.addItem("${b.text("action.export")}",action.exportData("std.user.code:学号,std.user.name:姓名,std.state.grade:年级,std.state.department.name:所在学院,std.state.major.name:专业,std.state.squad.name:班级,gpa:基础课绩点,gradeDetail:成绩明细,updatedAt:申请时间",null,'fileName=二学位申请信息'));
+      bar.addItem("${b.text("action.export")}",action.exportData("std.user.code:学号,std.user.name:姓名,std.person.code:证件号码,std.state.grade:年级,std.state.department.name:所在学院,std.state.major.name:专业,std.state.squad.name:班级,gpa:基础课绩点,gradeDetail:成绩明细,updatedAt:申请时间",null,'fileName=二学位申请信息'));
       bar.addItem("批量重新绩点",action.multi("recalc","确定计算更新已选记录的绩点?"));
     [/@]
     [@b.row]
