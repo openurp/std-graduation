@@ -2,7 +2,8 @@
 [@b.head/]
 [@b.grid items=squads var="squad"]
   [@b.gridbar]
-    bar.addItem("学生签收",action.multi('detail',null,null,"_blank"));
+    bar.addItem("学生签收表",action.multi('signatureReport',null,null,"_blank"));
+    bar.addItem("证书明细",action.multi('detail',null,null,"_blank"));
     bar.addItem("班级签收",action.method('report',null,null,"_blank"));
   [/@]
   [@b.row]

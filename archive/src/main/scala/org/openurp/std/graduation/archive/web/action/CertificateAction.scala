@@ -69,6 +69,16 @@ class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport
   }
 
   def detail: View = {
+    collectDetails()
+    forward()
+  }
+
+  def signatureReport: View = {
+    collectDetails()
+    forward()
+  }
+
+  private def collectDetails(): Unit = {
     val sessionId = longId("session")
     val squadIds = longIds("squad")
     val query: OqlBuilder[GraduateResult] = OqlBuilder.from(classOf[GraduateResult], "ar")
@@ -76,6 +86,10 @@ class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport
     query.join("ar.std.state.squad", "adc")
     query.where("ar.passed=true")
     query.where("adc.id in(:classIds)", squadIds)
+    val batches = Strings.splitToInt(get("batch", ""))
+    if (batches.nonEmpty) {
+      query.where("ar.batch in(:batches)", batches)
+    }
     val ars = entityDao.search(query)
     val res = Collections.newMap[Squad, mutable.Buffer[GraduateResult]]
     for (ar <- ars) {
@@ -100,7 +114,6 @@ class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport
     put("graduationMap", graduationMap)
     put("squads", squads)
     put("res", nres)
-    forward()
   }
 
 }
