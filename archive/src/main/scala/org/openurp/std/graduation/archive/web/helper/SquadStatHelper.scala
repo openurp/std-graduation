@@ -28,78 +28,27 @@ import org.openurp.std.info.model.Graduation
 
 class SquadStatHelper(entityDao: EntityDao) {
 
-  /** 统计毕业审核结果
-   *
-   * @param session
-   * @param passed
-   * @param batches
-   * @return
-   */
-  def statGraduate(session: GraduateSession, passed: Option[Boolean], batches: Iterable[Int]):
-  (collection.Seq[Squad], collection.Map[Squad, Any]) = {
-    val query = OqlBuilder.from[Array[Any]](classOf[GraduateResult].getName, "ar")
-      .where("ar.session=:session", session)
-    passed foreach { f =>
-      query.where("ar.passed=" + f.toString)
-    }
-    if (batches.nonEmpty) {
-      query.where("ar.batch  in(:batches)", batches)
-    }
-    query.join("ar.std.state.squad", "adc")
-    query.groupBy("adc.id")
-    query.select("adc.id,count(*)")
-    val datas = entityDao.search(query).toBuffer
-    buildMap(datas)
-  }
-
-  /** 统计学位审核结果
-   *
-   * @param session
-   * @param passed
-   * @param batches
-   * @return
-   */
-  def statDegree(session: GraduateSession, passed: Option[Boolean], batches: Iterable[Int]):
-  (collection.Seq[Squad], collection.Map[Squad, Any]) = {
-    val query = OqlBuilder.from[Array[Any]](classOf[DegreeResult].getName, "ar")
-      .where("ar.session=:session", session)
-    passed foreach { f =>
-      query.where("ar.passed=" + f.toString)
-    }
-    if (batches.nonEmpty) {
-      query.where("ar.batch  in(:batches)", batches)
-    }
-    query.join("ar.std.state.squad", "adc")
-    query.groupBy("adc.id")
-    query.select("adc.id,count(*)")
-    val datas = entityDao.search(query).toBuffer
-    buildMap(datas)
-  }
-
   /** 统计毕业证书
    *
    * @param session
    * @param batches
    * @return
    */
-  def statCertificate(session: GraduateSession,  batches: Iterable[Int]):
+  def statCertificate(session: GraduateSession, passed: Option[Boolean], batches: Iterable[Int]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
       .where("g.std.project=:project", session.project)
-      query.where("g.code is not null")
+      .where("g.graduateOn=:graduateOn", session.graduateOn)
+
+    passed foreach { p =>
+      if (p) query.where("g.certificateNo is not null")
+      else query.where("g.certificateNo is null")
+    }
     if (batches.nonEmpty) {
-      query.where(
-        "exists(from " + classOf[GraduateResult].getName + " gr where gr.session=:session and gr.std=g.std and gr.passed=true and gr.batch in(:batches))" +
-          " or exists(from " + classOf[DegreeResult].getName + " dr where dr.session=:session and dr.std=g.std and dr.passed=true and dr.batch in(:batches))")
-      query.param("session", session)
-      query.param("batches", batches)
-    }else{
-      query.where(
-        "exists(from " + classOf[GraduateResult].getName + " gr where gr.session=:session and gr.std=g.std and gr.passed=true)" +
-          " or exists(from " + classOf[DegreeResult].getName + " dr where dr.session=:session and dr.std=g.std and dr.passed=true)")
-      query.param("session", session)
+      query.where("g.batchNo in(:batches)", batches)
     }
     query.join("g.std.state.squad", "adc")
+    query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
     val datas = entityDao.search(query).toBuffer
@@ -112,19 +61,20 @@ class SquadStatHelper(entityDao: EntityDao) {
    * @param batches
    * @return
    */
-  def statDiploma(session: GraduateSession,   batches: Iterable[Int]):
+  def statDiploma(session: GraduateSession, batches: Iterable[Int]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
-    val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "a")
+    val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
       .where("g.project=:project", session.project)
       .where("g.degreeAwardOn = :graduateOn", session.graduateOn)
-      query.where("g.diplomaNo is not null")
+    query.where("g.diplomaNo is not null")
     if (batches.nonEmpty) {
       query.where(
-        "exists(from " + classOf[DegreeResult].getName + " dr where dr.session=:session and dr.std=g.std and gr.batch in(:batches))")
+        "exists(from " + classOf[DegreeResult].getName + " dr where dr.session=:session and dr.std=g.std and gr.batchNo in(:batches))")
       query.param("session", session)
       query.param("batches", batches)
     }
-    query.join("ar.std.state.squad", "adc")
+    query.join("g.std.state.squad", "adc")
+    query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
     val datas = entityDao.search(query).toBuffer

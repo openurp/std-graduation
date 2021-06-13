@@ -1,5 +1,5 @@
 [#ftl/]
 [@b.select name="session.id" items=sessions label="毕业年月" required="true"/]
 [@b.select name="passed" label="是否通过" items={"":"全部","1":"通过","0":"不通过"} value=""/]
-[@b.textfield name="batch" label="批次" /]
+[@b.textfield name="batchNo" label="批次" /]
 [@b.textfield name="printer" label="制表人" placeholder="默认当前用户"/]

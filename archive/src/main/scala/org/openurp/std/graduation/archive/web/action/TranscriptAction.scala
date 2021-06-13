@@ -28,6 +28,7 @@ import org.openurp.base.model.User
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
+import org.openurp.std.info.model.Graduation
 
 class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport {
 
@@ -44,8 +45,8 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
-    val batches = Strings.splitToInt(get("batch", ""))
-    val rs = helper.statGraduate(session, getBoolean("passed"), batches)
+    val batches = Strings.splitToInt(get("batchNo", ""))
+    val rs = helper.statCertificate(session, getBoolean("passed"), batches)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
@@ -55,20 +56,22 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
   def detail: View = {
     val sessionId = longId("session")
     val squadIds = longIds("squad")
-    val query: OqlBuilder[GraduateResult] = OqlBuilder.from(classOf[GraduateResult], "ar")
-      .where("ar.session.id=:sessionId", sessionId)
-    query.join("ar.std.state.squad", "adc")
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val query = OqlBuilder.from(classOf[Graduation], "g")
+      .where("g.graduateOn=:graduateOn", session.graduateOn)
+    query.join("g.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)
-    Params.getBoolean("passed") foreach { f =>
-      query.where("ar.passed=" + f.toString)
-    }
-    val batches = Strings.splitToInt(get("batch", ""))
+    val batches = Strings.splitToInt(get("batchNo", ""))
     if (batches.nonEmpty) {
-      query.where("ar.batch in  (:batches)", batches)
+      query.where("g.batchNo in  (:batches)", batches)
     }
-    val grs = entityDao.search(query)
-    put("grs", grs)
-    put("graduateSession", entityDao.get(classOf[GraduateSession], sessionId))
+    getBoolean("passed") foreach { p =>
+      if (p) query.where("g.certificateNo is not null")
+      else query.where("g.certificateNo is null")
+    }
+    val gs = entityDao.search(query)
+    put("gs", gs)
+    put("graduateSession", session)
     val builder = OqlBuilder.from(classOf[User], "user")
       .where(" user.code=:code", Securities.user)
     put("user", entityDao.search(builder).headOption)

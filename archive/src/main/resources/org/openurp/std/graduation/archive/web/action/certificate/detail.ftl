@@ -1,5 +1,10 @@
 [#ftl]
 [@b.head/]
+<style>
+@page{
+   size: portrait;
+}
+</style>
 <div style="font-size:13px">
   [#list squads as adc]
     <h4 width="100%" align="center" style="margin-bottom:5px">${adc.project.school.name }学历、学位证书名册
@@ -18,23 +23,23 @@
        </tr>
      </thead>
      <tbody>
-      [#list res[adc.id?string]?sort_by(["std","user","code"]) as ar]
+      [#list res[adc.id?string]?sort_by(["std","user","code"]) as g]
        <tr  align="center">
-         <td>${ar_index+1}</td>
-         <td>${ar.std.user.code}</td>
-         <td>${ar.std.user.name}</td>
-         <td>${ar.std.person.gender.name}</td>
-         <td>${(ar.std.person.birthday?string('yyyyMMdd'))!}</td>
-         <td>${(graduationMap.get(ar.std).code)!'--'}</td>
-         <td>${(graduationMap.get(ar.std).diplomaNo)!'--'}</td>
+         <td>${g_index+1}</td>
+         <td>${g.std.user.code}</td>
+         <td>${g.std.user.name}</td>
+         <td>${g.std.person.gender.name}</td>
+         <td>${(g.std.person.birthday?string('yyyyMMdd'))!}</td>
+         <td>${(g.certificateNo)!'--'}</td>
+         <td>${(g.diplomaNo)!'--'}</td>
        </tr>
        [/#list]
       </tbody>
    </table>
    <table width="100%" align="center">
        <tr>
-         <td width="64%"></td>
-         <td><B><br>辅导员:</B>____________________<br>[#list 1..15 as i]&nbsp;[/#list]${b.now?string('yyyy年MM月')}</td>
+         <td width="6%"></td>
+         <td><B><br>辅导员:</B>______________________________<br>[#list 1..15 as i]&nbsp;[/#list] _______年______月_______日</td>
        </tr>
    </table>
    [#if  adc_has_next]

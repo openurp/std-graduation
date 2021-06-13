@@ -1,10 +1,15 @@
 [#ftl]
 [@b.head/]
+<style>
+@page{
+   size: landscape;
+}
+</style>
 <div>
   [#list squads as adc]
-    [#assign arLists = res[adc.id?string]?sort_by(["std","user","code"])?chunk(20)]
-    [#assign arIndex=1]
-    [#list arLists  as arList]
+    [#assign gLists = res[adc.id?string]?sort_by(["std","user","code"])?chunk(20)]
+    [#assign gIndex=1]
+    [#list gLists  as gList]
     <h4 width="100%" align="center" style="margin-bottom:5px">${adc.project.school.name }学历、学位证书签收名册
        <br>${adc.department.name} ${adc.name}
     </h4>
@@ -24,15 +29,15 @@
        </tr>
      </thead>
      <tbody>
-      [#list arList as ar]
+      [#list gList as g]
        <tr  align="center" style="height:26px">
-         <td>${arIndex}[#assign arIndex=arIndex+1]</td>
-         <td>${ar.std.user.code}</td>
-         <td>${ar.std.user.name}</td>
-         <td>${ar.std.person.gender.name}</td>
-         <td>${(ar.std.person.birthday?string('yyyyMMdd'))!}</td>
-         <td>${(graduationMap.get(ar.std).code)!'--'}</td>
-         <td>${(graduationMap.get(ar.std).diplomaNo)!'--'}</td>
+         <td>${gIndex}[#assign gIndex=gIndex+1]</td>
+         <td>${g.std.user.code}</td>
+         <td>${g.std.user.name}</td>
+         <td>${g.std.person.gender.name}</td>
+         <td>${(g.std.person.birthday?string('yyyyMMdd'))!}</td>
+         <td>${(g.certificateNo)!'--'}</td>
+         <td>${(g.diplomaNo)!'--'}</td>
          <td></td>
          <td></td>
          <td></td>
@@ -46,7 +51,7 @@
          <td><B><br>辅导员:</B>____________________<br>[#list 1..15 as i]&nbsp;[/#list]${b.now?string('yyyy年MM月')}</td>
        </tr>
    </table>
-   [#if  arList_has_next]
+   [#if  gList_has_next]
    <div style='PAGE-BREAK-AFTER: always'></div>
    [/#if]
    [/#list]

@@ -13,7 +13,7 @@
     ${(squad.major.name)!} ${(squad.direction.name)!}
     [/@]
     [@b.col title="班级" width="30%" property="name"]
-     [@b.a href="!detail?session.id=${graduateSession.id}&squadIds=${squad.id}&batch=${Parameters['batch']!}&passed=${Parameters['passed']!}&printer=${Parameters['printer']!}" target="_blank"]${squad.name}[/@]
+     [@b.a href="!detail?session.id=${graduateSession.id}&squadIds=${squad.id}&batchNo=${Parameters['batchNo']!}&passed=${Parameters['passed']!}&printer=${Parameters['printer']!}" target="_blank"]${squad.name}[/@]
     [/@]
     [@b.col title="人数" width="10%"]
       ${squadMap.get(squad)}

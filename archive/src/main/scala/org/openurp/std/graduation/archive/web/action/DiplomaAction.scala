@@ -48,7 +48,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
-    val batches = Strings.splitToInt(get("batch", ""))
+    val batches = Strings.splitToInt(get("batchNo", ""))
     val rs = helper.statDiploma(session, batches)
     put("squads", rs._1)
     put("squadMap", rs._2)
@@ -60,7 +60,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
-    val batches = Strings.splitToInt(get("batch", ""))
+    val batches = Strings.splitToInt(get("batchNo", ""))
     val rs = helper.statDiploma(session, batches)
     put("squads", rs._1)
     put("squadMap", rs._2)

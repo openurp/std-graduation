@@ -25,15 +25,15 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.context.Params
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.EntityAction
-import org.openurp.base.edu.model.{Squad, Student}
+import org.openurp.base.edu.model.Squad
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
-import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
+import org.openurp.std.graduation.model.GraduateSession
 import org.openurp.std.info.model.Graduation
 
 import scala.collection.mutable
 
-class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport {
+class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
 
   def index: View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
@@ -44,74 +44,89 @@ class CertificateAction extends EntityAction[GraduateResult] with ProjectSupport
     forward()
   }
 
-  def report: View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
-    val helper = new SquadStatHelper(entityDao)
-    val batches = Strings.splitToInt(get("batch", ""))
-    val rs = helper.statCertificate(session, batches)
-    put("squads", rs._1)
-    put("squadMap", rs._2)
-    put("graduateSession", session)
-    forward()
-  }
 
   def search: View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
-    val batches = Strings.splitToInt(get("batch", ""))
-    val rs = helper.statCertificate(session, batches)
+    val batches = Strings.splitToInt(get("batchNo", ""))
+    val rs = helper.statCertificate(session, Some(true), batches)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
     forward()
   }
 
+  /** 班级证书明细 */
   def detail: View = {
     collectDetails()
     forward()
   }
 
-  def signatureReport: View = {
+  /** 学生签名表
+   * */
+  def signature: View = {
     collectDetails()
     forward()
   }
 
-  private def collectDetails(): Unit = {
+  /** 班级汇总
+   * 辅导员签收表
+   */
+  def stat: View = {
+    val sessionId = Params.getLong("session.id").get
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val helper = new SquadStatHelper(entityDao)
+    val batches = Strings.splitToInt(get("batchNo", ""))
+    val rs = helper.statCertificate(session, Some(true), batches)
+    put("squads", rs._1)
+    put("squadMap", rs._2)
+    put("graduateSession", session)
+    forward()
+  }
+
+  /** 延长生签收表
+   */
+  def deferred(): View = {
     val sessionId = longId("session")
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val query = OqlBuilder.from(classOf[Graduation], "g")
+      .where("g.graduateOn =:graduateOn", session.graduateOn)
+    query.join("g.std.state.squad", "adc")
+    query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //非延长生
+    query.where("g.certificateNo is not null")
+    put("res", entityDao.search(query))
+    put("session",session)
+    forward()
+  }
+
+  private def collectDetails(): Unit = {
     val squadIds = longIds("squad")
-    val query: OqlBuilder[GraduateResult] = OqlBuilder.from(classOf[GraduateResult], "ar")
-      .where("ar.session.id=:sessionId", sessionId)
-    query.join("ar.std.state.squad", "adc")
-    query.where("ar.passed=true")
+    val sessionId = longId("session")
+    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val query = OqlBuilder.from(classOf[Graduation], "g")
+      .where("g.graduateOn =:graduateOn", session.graduateOn)
+    query.join("g.std.state.squad", "adc")
+    query.where("g.certificateNo is not null")
+    query.where("g.std.state.grade = g.std.state.squad.grade") //非延长生
+
     query.where("adc.id in(:classIds)", squadIds)
-    val batches = Strings.splitToInt(get("batch", ""))
+    val batches = Strings.splitToInt(get("batchNo", ""))
     if (batches.nonEmpty) {
-      query.where("ar.batch in(:batches)", batches)
+      query.where("g.batchNo in(:batches)", batches)
     }
-    val ars = entityDao.search(query)
-    val res = Collections.newMap[Squad, mutable.Buffer[GraduateResult]]
-    for (ar <- ars) {
+    val grs = entityDao.search(query)
+    val res = Collections.newMap[Squad, mutable.Buffer[Graduation]]
+    for (ar <- grs) {
       val adc: Squad = ar.std.state.get.squad.get
-      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[GraduateResult])
+      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[Graduation])
       adArs += ar
     }
-    val nres = Collections.newMap[String, mutable.Buffer[GraduateResult]]
+    val nres = Collections.newMap[String, mutable.Buffer[Graduation]]
     res foreach { case (k, v) =>
       nres.put(k.id.toString, v)
     }
     val squads = res.keys.toBuffer.sorted(new MultiPropertyOrdering("department.code,code"))
-    val graduationMap = Collections.newMap[Student, Graduation]
-    for (gr <- ars) {
-      val gBuilder = OqlBuilder.from(classOf[Graduation], "graduation")
-      gBuilder.where("graduation.std=:std", gr.std)
-      val graduations = entityDao.search(gBuilder)
-      for (graduation <- graduations) {
-        graduationMap.put(gr.std, graduation)
-      }
-    }
-    put("graduationMap", graduationMap)
     put("squads", squads)
     put("res", nres)
   }
