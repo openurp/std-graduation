@@ -93,10 +93,14 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     val query = OqlBuilder.from(classOf[Graduation], "g")
       .where("g.graduateOn =:graduateOn", session.graduateOn)
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //非延长生
+    query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //延长生
     query.where("g.certificateNo is not null")
+    val batches = Strings.splitToInt(get("batchNo", ""))
+    if (batches.nonEmpty) {
+      query.where("g.batchNo in (:batches)", batches)
+    }
     put("res", entityDao.search(query))
-    put("session",session)
+    put("session", session)
     forward()
   }
 
