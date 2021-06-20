@@ -23,7 +23,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.page.SinglePage
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.base.edu.model.Squad
-import org.openurp.std.graduation.model.{DegreeResult, GraduateResult, GraduateSession}
+import org.openurp.std.graduation.model.{DegreeResult, GraduateSession}
 import org.openurp.std.info.model.Graduation
 
 class SquadStatHelper(entityDao: EntityDao) {
@@ -34,7 +34,7 @@ class SquadStatHelper(entityDao: EntityDao) {
    * @param batches
    * @return
    */
-  def statCertificate(session: GraduateSession, passed: Option[Boolean], batches: Iterable[Int]):
+  def statCertificate(session: GraduateSession, passed: Option[Boolean], deferred: Option[Boolean], batches: Iterable[Int]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
       .where("g.std.project=:project", session.project)
@@ -44,11 +44,15 @@ class SquadStatHelper(entityDao: EntityDao) {
       if (p) query.where("g.certificateNo is not null")
       else query.where("g.certificateNo is null")
     }
+    deferred foreach { d =>
+      if (d) query.where("g.std.state.grade != g.std.state.squad.grade")
+      else query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
+    }
     if (batches.nonEmpty) {
       query.where("g.batchNo in(:batches)", batches)
     }
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
+
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
     val datas = entityDao.search(query).toBuffer

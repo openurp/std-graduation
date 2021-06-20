@@ -46,7 +46,7 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, getBoolean("passed"), batches)
+    val rs = helper.statCertificate(session, getBoolean("passed"), getBoolean("deferred"), batches)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
