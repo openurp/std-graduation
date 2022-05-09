@@ -1,8 +1,0 @@
-[#ftl/]
-[@b.select name="degreeApply.session.id" items=sessions label="毕业批次"/]
-[@b.textfield name="degreeApply.std.user.code" label="学号"/]
-[@b.textfield name="degreeApply.std.user.name" label="姓名"/]
-[@b.textfield name="degreeApply.std.state.grade" label="年级"/]
-[@b.select name="degreeApply.std.state.department.id" items=departs label="所在学院" empty="..."/]
-[@b.textfield name="degreeApply.std.state.major.name" label="专业"/]
-[@b.textfield name="degreeApply.std.state.squad.name" label="班级"/]

@@ -1,0 +1,27 @@
+[#ftl]
+[@b.head/]
+  [@b.grid items=degreeApplies var="degreeApply"]
+    [@b.gridbar]
+      bar.addItem("单个下载", action.single("download",null,null,"_blank"));
+      [#if degreeApplies.totalItems<300]
+      bar.addItem("导出申请表",action.exportData(null,null,'template=org/openurp/std/graduation/audit/degree_apply.xlsx&fileName=学生学位申请表'));
+      [/#if]
+    [/@]
+    [@b.row]
+      [@b.boxcol/]
+      [@b.col title="学号" property="std.user.code" width="13%"/]
+      [@b.col title="姓名" property="std.user.name" width="8%"]
+        [@b.a href="!download?degreeApply.id="+degreeApply.id title="下载申请表" target="_blank"]${degreeApply.std.user.name}[/@]
+      [/@]
+      [@b.col title="学院" property="std.state.department.name"  width="10%"]
+       ${(degreeApply.std.state.department.shortName)!(degreeApply.std.state.department.name)!}
+      [/@]
+      [@b.col title="专业" property="std.state.major.name" width="19%"/]
+      [@b.col title="班级" property="std.state.squad.name" width="24%"/]
+      [@b.col title="学位" property="degree.name" width="10%"/]
+      [@b.col title="申请日期" width="10%" property="updatedAt"]
+        ${degreeApply.updatedAt?string("yyyy-MM-dd")}
+      [/@]
+    [/@]
+  [/@]
+[@b.foot/]
