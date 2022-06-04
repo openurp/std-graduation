@@ -17,9 +17,8 @@
 
 package org.openurp.std.graduation.audit.web.helper
 
-import java.time.ZoneId
+import java.time.{DayOfWeek, ZoneId}
 import java.time.format.DateTimeFormatter
-
 import org.beangle.commons.collection.Collections
 import org.openurp.std.graduation.model.DegreeApply
 
@@ -48,9 +47,16 @@ object ApplyDataConvertor {
     val formatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
     data.put("degree", apply.degree.name)
     data.put("studyOn", std.studyOn.format(formatter))
-    data.put("graduateOn", std.graduateOn.format(formatter))
+    data.put("graduateOn", apply.session.graduateOn.format(formatter))
     data.put("applyOn", apply.updatedAt.atZone(ZoneId.systemDefault()).toLocalDate.format(formatter))
 
+    val formatter2 = DateTimeFormatter.ofPattern("yyyy 年 M 月 d 日")
+    var auditOn =  apply.session.graduateOn.minusDays(1)
+    while(auditOn.getDayOfWeek  == DayOfWeek.SATURDAY || auditOn.getDayOfWeek  == DayOfWeek.SUNDAY ){
+      auditOn = auditOn.minusDays(1)
+    }
+    data.put("auditOn1", auditOn.format(formatter2))
+    data.put("auditOn2", apply.session.graduateOn.format(formatter2))
     data
   }
 }

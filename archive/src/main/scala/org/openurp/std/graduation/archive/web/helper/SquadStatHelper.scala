@@ -33,11 +33,11 @@ class SquadStatHelper(entityDao: EntityDao) {
    * @param batches
    * @return
    */
-  def statCertificate(session: GraduateSession, passed: Option[Boolean], batches: Iterable[Int]):
+  def statCertificate(session: GraduateSession, batches: Iterable[Int], passed: Option[Boolean], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
       .where("g.std.project=:project", session.project)
-      .where("g.graduateOn=:graduateOn", session.graduateOn)
+      .where("g.graduateOn = :graduateOn", session.graduateOn)
 
     passed foreach { p =>
       if (p) query.where("g.certificateNo is not null")
@@ -47,7 +47,10 @@ class SquadStatHelper(entityDao: EntityDao) {
       query.where("g.batchNo in(:batches)", batches)
     }
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
+    deferred foreach { df =>
+      if (df) query.where("g.std.graduateOn <= g.graduateOn")
+      else query.where("g.std.graduateOn = g.graduateOn")
+    }
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
     val datas = entityDao.search(query).toBuffer
@@ -60,7 +63,7 @@ class SquadStatHelper(entityDao: EntityDao) {
    * @param batches
    * @return
    */
-  def statDiploma(session: GraduateSession, batches: Iterable[Int]):
+  def statDiploma(session: GraduateSession, batches: Iterable[Int], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
       .where("g.project=:project", session.project)
@@ -72,8 +75,11 @@ class SquadStatHelper(entityDao: EntityDao) {
       query.param("session", session)
       query.param("batches", batches)
     }
+    deferred foreach { df =>
+      if (df) query.where("g.std.graduateOn <= g.graduateOn")
+      else query.where("g.std.graduateOn = g.graduateOn")
+    }
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
     val datas = entityDao.search(query).toBuffer

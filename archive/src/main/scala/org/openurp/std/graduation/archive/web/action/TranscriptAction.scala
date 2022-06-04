@@ -34,7 +34,7 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
   def index: View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc,session.name desc")
+    query.orderBy("session.graduateOn desc")
     val sessions = entityDao.search(query)
     put("sessions", sessions)
     forward()
@@ -45,7 +45,7 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, getBoolean("passed"), batches)
+    val rs = helper.statCertificate(session, batches, getBoolean("passed"),None)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)

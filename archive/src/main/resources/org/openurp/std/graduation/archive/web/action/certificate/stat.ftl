@@ -44,8 +44,9 @@
        [/#list]
        [#if lastDepart?length !=0]
        <tr style="height:26px" class="brightStyle">
-         <td colspan="7"></td>
+         <td colspan="6"></td>
          <td>小计:${totalInDepart}人</td>
+         <td></td>
        </tr>
        [/#if]
      </tbody>

@@ -66,7 +66,7 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     entityDao.search(builder).headOption
   }
 
-  def apply(): View = {
+  def doApply(): View = {
     val student = getStudent
     val session = entityDao.get(classOf[GraduateSession], longId("session"))
     val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
