@@ -43,6 +43,10 @@ class SquadStatHelper(entityDao: EntityDao) {
       if (p) query.where("g.certificateNo is not null")
       else query.where("g.certificateNo is null")
     }
+    deferred foreach { d =>
+      if (d) query.where("g.std.state.grade != g.std.state.squad.grade")
+      else query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
+    }
     if (batches.nonEmpty) {
       query.where("g.batchNo in(:batches)", batches)
     }

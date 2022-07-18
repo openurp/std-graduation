@@ -51,7 +51,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, Some(true),Some(false))
+    val rs = helper.statCertificate(session, batches, Some(true), Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
@@ -110,7 +110,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, Some(true),Some(false))
+    val rs = helper.statCertificate(session, batches, Some(true), Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
@@ -125,8 +125,12 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     val query = OqlBuilder.from(classOf[Graduation], "g")
       .where("g.graduateOn =:graduateOn", session.graduateOn)
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.graduateOn < :graduateOn", session.graduateOn)
+    query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //延长生
     query.where("g.certificateNo is not null")
+    val batches = Strings.splitToInt(get("batchNo", ""))
+    if (batches.nonEmpty) {
+      query.where("g.batchNo in (:batches)", batches)
+    }
     put("res", entityDao.search(query))
     put("session", session)
     forward()

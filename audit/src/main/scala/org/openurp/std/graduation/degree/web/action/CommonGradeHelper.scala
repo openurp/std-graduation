@@ -15,15 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.audit.web.action
+package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.base.std.model.Student
-import org.openurp.edu.grade.course.model.CourseGrade
-import org.openurp.edu.grade.course.service.impl.BestGradeFilter
-import org.openurp.edu.grade.model.Grade
+import org.openurp.edu.grade.service.impl.BestGradeFilter
+import org.openurp.edu.grade.model.{CourseGrade, Grade}
 
 class CommonGradeHelper(entityDao: EntityDao, filter: BestGradeFilter) {
 

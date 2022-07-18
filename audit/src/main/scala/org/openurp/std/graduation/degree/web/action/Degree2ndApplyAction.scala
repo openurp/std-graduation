@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.audit.web.action
+package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.edu.grade.service.impl.BestGradeFilter
 import org.openurp.starter.edu.helper.ProjectSupport
-import org.openurp.edu.grade.course.service.impl.BestGradeFilter
-import org.openurp.std.graduation.model.GraduateSession
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
+import org.openurp.std.graduation.model.GraduateSession
 
 class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSupport {
 

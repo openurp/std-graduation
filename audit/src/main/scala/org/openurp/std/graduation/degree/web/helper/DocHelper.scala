@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.audit.web.helper
+package org.openurp.std.graduation.degree.web.helper
 
 import java.io.ByteArrayOutputStream
 import java.net.URL
@@ -29,7 +29,7 @@ object DocHelper {
 
   def toDoc(apply: DegreeApply): Array[Byte] = {
     val data= ApplyDataConvertor.convert(apply)
-    val url = this.getClass.getResource("/org/openurp/std/graduation/audit/degree_apply.docx")
+    val url = this.getClass.getResource("/org/openurp/std/graduation/degree/degree_apply.docx")
     DocHelper.toDoc(url, data)
   }
 

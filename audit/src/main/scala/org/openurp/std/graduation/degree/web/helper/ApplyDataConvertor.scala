@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.audit.web.helper
+package org.openurp.std.graduation.degree.web.helper
 
 import java.time.{DayOfWeek, ZoneId}
 import java.time.format.DateTimeFormatter

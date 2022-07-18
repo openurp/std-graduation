@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.audit.web.action
+package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.transfer.exporter.ExportSetting
@@ -24,7 +24,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.support.helper.PopulateHelper
 import org.openurp.starter.edu.helper.ProjectSupport
-import org.openurp.std.graduation.audit.web.helper.{ApplyDataConvertor, DocHelper}
+import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DocHelper}
 import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
 
 /** 学位申请审核
