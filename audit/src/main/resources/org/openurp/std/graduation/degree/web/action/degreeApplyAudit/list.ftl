@@ -3,7 +3,7 @@
   [@b.grid items=degreeApplies var="degreeApply"]
     [@b.gridbar]
       bar.addItem("单个下载", action.single("download",null,null,"_blank"));
-      [#if degreeApplies.totalItems<300]
+      [#if degreeApplies.totalItems <= 500]
       bar.addItem("导出申请表",action.exportData(null,null,'template=org/openurp/std/graduation/degree/degree_apply.xlsx&fileName=学生学位申请表'));
       [/#if]
     [/@]

@@ -6,3 +6,5 @@
 [@b.select name="degreeApply.std.state.department.id" items=departs label="所在学院" empty="..."/]
 [@b.textfield name="degreeApply.std.state.major.name" label="专业"/]
 [@b.textfield name="degreeApply.std.state.squad.name" label="班级"/]
+[@b.datepicker name="applyOn" label="申请日期"/]
+

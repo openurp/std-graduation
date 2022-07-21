@@ -18,11 +18,12 @@
 package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.orm.hibernate.QuerySupport
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.beangle.webmvc.support.helper.PopulateHelper
+import org.beangle.webmvc.support.helper.{PopulateHelper, QueryHelper}
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DocHelper}
 import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
@@ -32,9 +33,18 @@ import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
 class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupport {
 
   override def indexSetting(): Unit = {
-    val query = OqlBuilder.from(classOf[GraduateSession], "gs")
-    put("sessions", entityDao.search(query))
+    val query = OqlBuilder.from(classOf[GraduateSession], "session")
+    query.where("session.project = :project", getProject)
+    query.orderBy("session.graduateOn desc,session.name desc")
+    val sessions = entityDao.search(query)
+    put("sessions", sessions)
     put("departs", getDeparts)
+  }
+
+  override def getQueryBuilder: OqlBuilder[DegreeApply] = {
+    val query = super.getQueryBuilder
+    QueryHelper.dateBetween(query, "degreeApply", "updatedAt", "applyOn", "applyOn")
+    query
   }
 
   def download(): View = {
