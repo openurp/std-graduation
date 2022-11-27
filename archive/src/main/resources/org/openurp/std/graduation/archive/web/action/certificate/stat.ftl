@@ -37,7 +37,7 @@
          <td align="center">${squadMap.get(squad)} [#assign totalInDepart=totalInDepart+squadMap.get(squad)]</td>
          <td></td>
          <td></td>
-         <td>${(squad.instructor.user.name)!}</td>
+         <td>${(squad.master.name)!}</td>
          <td></td>
        </tr>
 

@@ -1,8 +1,8 @@
 [#assign std=degreeApply.std]
 <table class="infoTable">
    <tr>
-     <td class="title">学号</td><td>${std.user.code}</td>
-     <td class="title">姓名</td><td>${std.user.name}</td>
+     <td class="title">学号</td><td>${std.code}</td>
+     <td class="title">姓名</td><td>${std.name}</td>
      <td class="title">性别</td><td>${(std.person.gender.name)!}</td>
    </tr>
    <tr>

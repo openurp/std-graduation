@@ -6,7 +6,7 @@
 }
 </style>
 <div>
-    [#assign gLists = res?sort_by(["std","user","code"])?chunk(20)]
+    [#assign gLists = res?sort_by(["std","code"])?chunk(20)]
     [#assign gIndex=1]
     [#list gLists  as gList]
     <h4 width="100%" align="center" style="margin-bottom:5px">${session.project.school.name }学历、学位证书签收名册
@@ -31,8 +31,8 @@
       [#list gList as g]
        <tr  align="center" style="height:26px">
          <td>${gIndex}[#assign gIndex=gIndex+1]</td>
-         <td>${g.std.user.code}</td>
-         <td>${g.std.user.name}</td>
+         <td>${g.std.code}</td>
+         <td>${g.std.name}</td>
          <td>${g.std.person.gender.name}</td>
          <td>${(g.std.person.birthday?string('yyyyMMdd'))!}</td>
          <td>${(g.certificateNo)!'--'}</td>

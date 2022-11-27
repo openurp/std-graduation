@@ -48,11 +48,11 @@ class CommonGradeHelper(entityDao: EntityDao, filter: BestGradeFilter) {
     var gpSum = 0d
     var creditSum = 0f
 
-    var sb = Collections.newBuffer[String]
+    val sb = Collections.newBuffer[String]
     for (grade <- grades) {
-      gpSum += grade.gp.get * grade.course.credits
-      creditSum += grade.course.credits
-      sb += s"${grade.semester.schoolYear} ${grade.semester.name} ${grade.course.name} ${grade.course.credits}分 成绩${grade.scoreText.getOrElse("")} 绩点 ${grade.gp.getOrElse("")}"
+      gpSum += grade.gp.get * grade.credits
+      creditSum += grade.credits
+      sb += s"${grade.semester.schoolYear} ${grade.semester.name} ${grade.course.name} ${grade.credits}分 成绩${grade.scoreText.getOrElse("")} 绩点 ${grade.gp.getOrElse("")}"
     }
     if (creditSum <= 0) {
       (0f, sb.mkString("\n"))

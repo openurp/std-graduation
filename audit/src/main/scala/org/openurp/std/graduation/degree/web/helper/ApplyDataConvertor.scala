@@ -28,9 +28,9 @@ object ApplyDataConvertor {
     val std = apply.std
     val data = Collections.newMap[String, String]
     data.put("school", std.project.school.name)
-    data.put("code", std.user.code)
-    data.put("name", std.user.name)
-    data.put("gender", std.user.gender.name)
+    data.put("code", std.code)
+    data.put("name", std.name)
+    data.put("gender", std.gender.name)
 
     std.state foreach { state =>
       data.put("depart", state.department.name)

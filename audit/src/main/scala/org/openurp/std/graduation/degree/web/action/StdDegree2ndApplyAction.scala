@@ -18,20 +18,19 @@
 package org.openurp.std.graduation.degree.web.action
 
 import java.time.Instant
-
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.mapping
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
 import org.openurp.edu.grade.service.impl.BestGradeFilter
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
-import org.openurp.starter.edu.helper.ProjectSupport
 
 class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectSupport {
-
+  var entityDao: EntityDao = _
   var bestGradeFilter: BestGradeFilter = _
 
   def index(): View = {
@@ -101,7 +100,7 @@ class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectS
 
   private def getStudent: Student = {
     val builder = OqlBuilder.from(classOf[Student], "s")
-    builder.where("s.user.code=:code", Securities.user)
+    builder.where("s.code=:code", Securities.user)
     entityDao.search(builder).head
   }
 }

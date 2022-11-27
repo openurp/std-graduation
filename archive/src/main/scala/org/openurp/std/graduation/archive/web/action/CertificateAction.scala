@@ -20,24 +20,25 @@ package org.openurp.std.graduation.archive.web.action
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.context.Params
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.std.model.Squad
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.std.model.{Graduate, Squad}
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.GraduateSession
-import org.openurp.std.info.model.Graduation
 
 import scala.collection.mutable
 
 /** 毕业证签收表
  *
  */
-class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
+class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
 
-  def index: View = {
+  var entityDao: EntityDao = _
+
+  def index(): View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
     query.orderBy("session.graduateOn desc,session.name desc")
@@ -46,7 +47,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     forward()
   }
 
-  def search: View = {
+  def search(): View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
@@ -59,7 +60,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
   }
 
   /** 班级证书明细 */
-  def detail: View = {
+  def detail(): View = {
     collectDetails()
     forward()
   }
@@ -68,7 +69,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
     val squadIds = longIds("squad")
     val sessionId = longId("session")
     val session = entityDao.get(classOf[GraduateSession], sessionId)
-    val query = OqlBuilder.from(classOf[Graduation], "g")
+    val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn =:graduateOn", session.graduateOn)
     query.join("g.std.state.squad", "adc")
     query.where("g.certificateNo is not null")
@@ -80,13 +81,13 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
       query.where("g.batchNo in(:batches)", batches)
     }
     val grs = entityDao.search(query)
-    val res = Collections.newMap[Squad, mutable.Buffer[Graduation]]
+    val res = Collections.newMap[Squad, mutable.Buffer[Graduate]]
     for (ar <- grs) {
       val adc: Squad = ar.std.state.get.squad.get
-      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[Graduation])
+      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[Graduate])
       adArs += ar
     }
-    val nres = Collections.newMap[String, mutable.Buffer[Graduation]]
+    val nres = Collections.newMap[String, mutable.Buffer[Graduate]]
     res foreach { case (k, v) =>
       nres.put(k.id.toString, v)
     }
@@ -97,7 +98,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
 
   /** 学生签名表
    * */
-  def signature: View = {
+  def signature(): View = {
     collectDetails()
     forward()
   }
@@ -105,7 +106,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
   /** 班级汇总
    * 辅导员签收表
    */
-  def stat: View = {
+  def stat(): View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
@@ -122,7 +123,7 @@ class CertificateAction extends EntityAction[Graduation] with ProjectSupport {
   def deferred(): View = {
     val sessionId = longId("session")
     val session = entityDao.get(classOf[GraduateSession], sessionId)
-    val query = OqlBuilder.from(classOf[Graduation], "g")
+    val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn =:graduateOn", session.graduateOn)
     query.join("g.std.state.squad", "adc")
     query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //延长生

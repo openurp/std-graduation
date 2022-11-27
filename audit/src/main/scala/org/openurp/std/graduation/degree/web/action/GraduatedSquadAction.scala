@@ -19,19 +19,20 @@ package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.std.model.{Squad, Student}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.std.model.{Graduate, Squad, Student}
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
-import org.openurp.std.info.model.Graduation
 
 import scala.collection.mutable
 
 class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupport {
 
-  def index: View = {
+  var entityDao: EntityDao = _
+
+  def index(): View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
     query.orderBy("session.graduateOn desc,session.name desc")
@@ -40,7 +41,7 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
     forward()
   }
 
-  def search: View = {
+  def search(): View = {
     val sessionId = longId("session")
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val query = OqlBuilder.from[Array[Any]](classOf[GraduateResult].getName, "ar")
@@ -58,7 +59,7 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
     forward()
   }
 
-  def diploma: View = {
+  def diploma(): View = {
     val sessionId = longId("session")
     val squadIds = longIds("squad")
     val query: OqlBuilder[GraduateResult] = OqlBuilder.from(classOf[GraduateResult], "ar").where("ar.session.id=:sessionId", sessionId)
@@ -76,22 +77,22 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
       nres.put(k.id.toString, v)
     }
     val squads = res.keys.toBuffer.sorted(new MultiPropertyOrdering("department.code,code"))
-    val graduationMap = Collections.newMap[Student, Graduation]
+    val graduateMap = Collections.newMap[Student, Graduate]
     for (gr <- ars) {
-      val gBuilder = OqlBuilder.from(classOf[Graduation], "graduation")
-      gBuilder.where("graduation.std=:std", gr.std)
+      val gBuilder = OqlBuilder.from(classOf[Graduate], "graduate")
+      gBuilder.where("graduate.std=:std", gr.std)
       val graduations = entityDao.search(gBuilder)
       for (graduation <- graduations) {
-        graduationMap.put(gr.std, graduation)
+        graduateMap.put(gr.std, graduation)
       }
     }
-    put("graduationMap", graduationMap)
+    put("graduateMap", graduateMap)
     put("squads", squads)
     put("res", nres)
     forward()
   }
 
-  def test():View={
+  def test(): View = {
     forward()
   }
 

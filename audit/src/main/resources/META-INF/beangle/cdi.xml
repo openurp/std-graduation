@@ -2,5 +2,6 @@
 <cdi>
   <container>
     <module class="org.openurp.std.graduation.degree.web.action.DefaultModule" />
+    <module class="org.openurp.edu.grade.service.impl.DefaultBindModule" />
   </container>
 </cdi>

@@ -17,20 +17,21 @@
 
 package org.openurp.std.graduation.degree.web.action
 
-import java.time.Instant
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.view.{Status, View}
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
-import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateSession}
-import org.openurp.std.graduation.degree.web.helper.DocHelper
 import org.openurp.edu.program.domain.ProgramProvider
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
+import org.openurp.std.graduation.degree.web.helper.DocHelper
+import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateSession}
+
+import java.time.Instant
 
 class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport {
-
+  var entityDao: EntityDao = _
   var programProvider: ProgramProvider = _
 
   def index(): View = {
@@ -94,7 +95,7 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     val std = getStudent
     if (std == apply.std) {
       val bytes = DocHelper.toDoc(apply)
-      val title = s"${std.user.code}_${std.user.name}学位申请表"
+      val title = s"${std.code}_${std.name}学位申请表"
       val filename = new String(title.getBytes, "ISO8859-1")
       response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
       response.setHeader("Content-Length", bytes.length.toString)
@@ -123,7 +124,7 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
 
   private def getStudent: Student = {
     val builder = OqlBuilder.from(classOf[Student], "s")
-    builder.where("s.user.code=:code", Securities.user)
+    builder.where("s.code=:code", Securities.user)
     entityDao.search(builder).head
   }
 

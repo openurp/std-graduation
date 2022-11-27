@@ -23,7 +23,7 @@ import org.beangle.commons.collection.page.SinglePage
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.base.std.model.Squad
 import org.openurp.std.graduation.model.{DegreeResult, GraduateResult, GraduateSession}
-import org.openurp.std.info.model.Graduation
+import org.openurp.base.std.model.Graduate
 
 class SquadStatHelper(entityDao: EntityDao) {
 
@@ -35,7 +35,7 @@ class SquadStatHelper(entityDao: EntityDao) {
    */
   def statCertificate(session: GraduateSession, batches: Iterable[Int], passed: Option[Boolean], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
-    val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
+    val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
       .where("g.std.project=:project", session.project)
       .where("g.graduateOn = :graduateOn", session.graduateOn)
 
@@ -69,7 +69,7 @@ class SquadStatHelper(entityDao: EntityDao) {
    */
   def statDiploma(session: GraduateSession, batches: Iterable[Int], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
-    val query = OqlBuilder.from[Array[Any]](classOf[Graduation].getName, "g")
+    val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
       .where("g.project=:project", session.project)
       .where("g.degreeAwardOn = :graduateOn", session.graduateOn)
     query.where("g.diplomaNo is not null")

@@ -9,9 +9,9 @@
     [/@]
     [@b.row]
       [@b.boxcol/]
-      [@b.col title="学号" property="std.user.code" width="13%"/]
-      [@b.col title="姓名" property="std.user.name" width="8%"]
-        [@b.a href="!download?degreeApply.id="+degreeApply.id title="下载申请表" target="_blank"]${degreeApply.std.user.name}[/@]
+      [@b.col title="学号" property="std.code" width="13%"/]
+      [@b.col title="姓名" property="std.name" width="8%"]
+        [@b.a href="!download?degreeApply.id="+degreeApply.id title="下载申请表" target="_blank"]${degreeApply.std.name}[/@]
       [/@]
       [@b.col title="学院" property="std.state.department.name"  width="10%"]
        ${(degreeApply.std.state.department.shortName)!(degreeApply.std.state.department.name)!}

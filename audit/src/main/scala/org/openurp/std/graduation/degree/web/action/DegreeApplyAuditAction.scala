@@ -24,7 +24,8 @@ import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.support.helper.{PopulateHelper, QueryHelper}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.model.Project
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DocHelper}
 import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
 
@@ -33,6 +34,8 @@ import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
 class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
     query.orderBy("session.graduateOn desc,session.name desc")
@@ -51,7 +54,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupp
     val apply = entityDao.get(classOf[DegreeApply], longId("degreeApply"))
     val bytes = DocHelper.toDoc(apply)
     val std = apply.std
-    val title = s"${std.user.code}_${std.user.name}学位申请表"
+    val title = s"${std.code}_${std.name}学位申请表"
     val filename = new String(title.getBytes, "ISO8859-1")
     response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
     response.setHeader("Content-Length", bytes.length.toString)
@@ -64,15 +67,15 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupp
 
   @ignore
   override def configExport(setting: ExportSetting): Unit = {
-    val selectIds = ids(simpleEntityName, PopulateHelper.getType(entityType).id.clazz)
+    val selectIds = ids(simpleEntityName,classOf[Long])
     val items =
       if (selectIds.isEmpty) {
         val builder = getQueryBuilder
         entityDao.search(builder.limit(null))
       } else {
-        entityDao.findBy(entityType, "id", selectIds)
+        entityDao.findBy(classOf[DegreeApply], "id", selectIds)
       }
-    val sorted = items.toBuffer.sortWith((x, y) => x.std.user.code.compare(y.std.user.code) < 0)
+    val sorted = items.toBuffer.sortWith((x, y) => x.std.code.compare(y.std.code) < 0)
     import scala.jdk.javaapi.CollectionConverters.*
     val applies = sorted.map(x => asJava(ApplyDataConvertor.convert(x)))
     setting.context.put("school", getProject.school.name)

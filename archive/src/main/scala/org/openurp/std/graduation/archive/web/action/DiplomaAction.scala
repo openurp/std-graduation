@@ -20,15 +20,14 @@ package org.openurp.std.graduation.archive.web.action
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.context.Params
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.std.model.{Squad, Student}
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.std.model.{Graduate, Squad, Student}
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.{DegreeResult, GraduateSession}
-import org.openurp.std.info.model.Graduation
 
 import scala.collection.mutable
 
@@ -37,7 +36,9 @@ import scala.collection.mutable
  */
 class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
 
-  def index: View = {
+  var entityDao: EntityDao = _
+
+  def index(): View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
     query.orderBy("session.graduateOn desc,session.name desc")
@@ -46,7 +47,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     forward()
   }
 
-  def report: View = {
+  def report(): View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
@@ -58,7 +59,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     forward()
   }
 
-  def search: View = {
+  def search(): View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
@@ -70,7 +71,7 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
     forward()
   }
 
-  def detail: View = {
+  def detail(): View = {
     val sessionId = longId("session")
     val squadIds = longIds("squad")
     val query: OqlBuilder[DegreeResult] = OqlBuilder.from(classOf[DegreeResult], "ar")
@@ -90,16 +91,16 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
       nres.put(k.id.toString, v)
     }
     val squads = res.keys.toBuffer.sorted(new MultiPropertyOrdering("department.code,code"))
-    val graduationMap = Collections.newMap[Student, Graduation]
+    val graduateMap = Collections.newMap[Student, Graduate]
     for (gr <- ars) {
-      val gBuilder = OqlBuilder.from(classOf[Graduation], "graduation")
-      gBuilder.where("graduation.std=:std", gr.std)
+      val gBuilder = OqlBuilder.from(classOf[Graduate], "graduate")
+      gBuilder.where("graduate.std=:std", gr.std)
       val graduations = entityDao.search(gBuilder)
       for (graduation <- graduations) {
-        graduationMap.put(gr.std, graduation)
+        graduateMap.put(gr.std, graduation)
       }
     }
-    put("graduationMap", graduationMap)
+    put("graduationMap", graduateMap)
     put("squads", squads)
     put("res", nres)
     forward()

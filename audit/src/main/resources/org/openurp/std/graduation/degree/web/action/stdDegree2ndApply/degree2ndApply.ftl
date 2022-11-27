@@ -2,8 +2,8 @@
 <table class="infoTable">
    <tr>
      <td class="title">姓名</td>
-     <td>${std.user.name}</td>
-     <td class="title">学号</td><td>${std.user.code}</td>
+     <td>${std.name}</td>
+     <td class="title">学号</td><td>${std.code}</td>
      <td class="title">性别</td><td>${(std.person.gender.name)!}</td>
      <td class="title">班级</td><td>${(std.state.squad.name)!}</td>
    </tr>

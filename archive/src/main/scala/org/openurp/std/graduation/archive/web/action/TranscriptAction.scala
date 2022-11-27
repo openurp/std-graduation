@@ -18,20 +18,22 @@
 package org.openurp.std.graduation.archive.web.action
 
 import org.beangle.commons.lang.Strings
-import org.beangle.data.dao.OqlBuilder
+import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.context.Params
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.model.User
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.std.model.Graduate
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
-import org.openurp.std.info.model.Graduation
 
 class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport {
 
-  def index: View = {
+  var entityDao: EntityDao = _
+
+  def index(): View = {
     val query = OqlBuilder.from(classOf[GraduateSession], "session")
     query.where("session.project = :project", getProject)
     query.orderBy("session.graduateOn desc")
@@ -40,23 +42,23 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     forward()
   }
 
-  def search: View = {
+  def search(): View = {
     val sessionId = Params.getLong("session.id").get
     val session = entityDao.get(classOf[GraduateSession], sessionId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, getBoolean("passed"),None)
+    val rs = helper.statCertificate(session, batches, getBoolean("passed"), None)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateSession", session)
     forward()
   }
 
-  def detail: View = {
+  def detail(): View = {
     val sessionId = longId("session")
     val squadIds = longIds("squad")
     val session = entityDao.get(classOf[GraduateSession], sessionId)
-    val query = OqlBuilder.from(classOf[Graduation], "g")
+    val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn=:graduateOn", session.graduateOn)
     query.join("g.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)

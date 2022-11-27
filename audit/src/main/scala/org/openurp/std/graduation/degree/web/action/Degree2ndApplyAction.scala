@@ -20,8 +20,9 @@ package org.openurp.std.graduation.degree.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
+import org.openurp.base.model.Project
 import org.openurp.edu.grade.service.impl.BestGradeFilter
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
 import org.openurp.std.graduation.model.GraduateSession
 
@@ -30,6 +31,8 @@ class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSup
   var bestGradeFilter: BestGradeFilter = _
 
   override def indexSetting(): Unit = {
+    given project: Project = getProject
+
     val query = OqlBuilder.from(classOf[GraduateSession], "gs")
     put("sessions", entityDao.search(query))
     put("departs", getDeparts)

@@ -23,11 +23,11 @@
        </tr>
      </thead>
      <tbody>
-      [#list res[adc.id?string]?sort_by(["std","user","code"]) as g]
+      [#list res[adc.id?string]?sort_by(["std","code"]) as g]
        <tr  align="center">
          <td>${g_index+1}</td>
-         <td>${g.std.user.code}</td>
-         <td>${g.std.user.name}</td>
+         <td>${g.std.code}</td>
+         <td>${g.std.name}</td>
          <td>${g.std.person.gender.name}</td>
          <td>${(g.std.person.birthday?string('yyyyMMdd'))!}</td>
          <td>${(g.certificateNo)!'--'}</td>
