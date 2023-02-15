@@ -21,7 +21,7 @@
   [#if degreeApply??]
   [@b.form name="removeApplyForm_"+degreeApply.id  action="!remove?id="+degreeApply.id+"&_method=delete"][/@]
   [#assign title]
-     <span class="glyphicon glyphicon-bookmark"></span>${degreeApply.session.name}<span style="font-size:0.8em">(${degreeApply.session.graduateOn?string("yyyy-MM")}毕业)</span>
+     <span class="glyphicon glyphicon-bookmark"></span>${degreeApply.batch.name}<span style="font-size:0.8em">(${degreeApply.batch.graduateOn?string("yyyy-MM")}毕业)</span>
      [#if degreeApply.passed!false]审核通过
      [#else]
       <div class="btn-group">

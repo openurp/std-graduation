@@ -27,39 +27,39 @@ import org.openurp.base.model.User
 import org.openurp.base.std.model.Graduate
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
-import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
+import org.openurp.std.graduation.model.{GraduateResult, GraduateBatch}
 
 class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport {
 
   var entityDao: EntityDao = _
 
   def index(): View = {
-    val query = OqlBuilder.from(classOf[GraduateSession], "session")
-    query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc")
-    val sessions = entityDao.search(query)
-    put("sessions", sessions)
+    val query = OqlBuilder.from(classOf[GraduateBatch], "batch")
+    query.where("batch.project = :project", getProject)
+    query.orderBy("batch.graduateOn desc")
+    val batches = entityDao.search(query)
+    put("batches", batches)
     forward()
   }
 
   def search(): View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = Params.getLong("batch.id").get
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, getBoolean("passed"), None)
+    val rs = helper.statCertificate(batch, batches, getBoolean("passed"), None)
     put("squads", rs._1)
     put("squadMap", rs._2)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
   def detail(): View = {
-    val sessionId = longId("session")
+    val batchId = longId("batch")
     val squadIds = longIds("squad")
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
-      .where("g.graduateOn=:graduateOn", session.graduateOn)
+      .where("g.graduateOn=:graduateOn", batch.graduateOn)
     query.join("g.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)
     val batches = Strings.splitToInt(get("batchNo", ""))
@@ -72,7 +72,7 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     }
     val gs = entityDao.search(query)
     put("gs", gs)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     val builder = OqlBuilder.from(classOf[User], "user")
       .where(" user.code=:code", Securities.user)
     put("user", entityDao.search(builder).headOption)

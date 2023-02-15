@@ -1,5 +1,5 @@
 [#ftl/]
-[@b.select name="session.id" items=sessions label="毕业年月" required="true"/]
+[@b.select name="batch.id" items=batches label="毕业年月" required="true"/]
 [@b.select name="passed" label="是否通过" items={"":"全部","1":"通过","0":"不通过"} value=""/]
 [@b.select name="deferred" label="延长生" items={"":"全部","1":"只含延长生","0":"不含延长生"} value=""/]
 [@b.textfield name="batchNo" label="批次" placeholder="1,2,3"/]

@@ -24,7 +24,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad, Student}
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.model.{GraduateResult, GraduateSession}
+import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 
 import scala.collection.mutable
 
@@ -33,19 +33,19 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
   var entityDao: EntityDao = _
 
   def index(): View = {
-    val query = OqlBuilder.from(classOf[GraduateSession], "session")
-    query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc,session.name desc")
-    val sessions = entityDao.search(query)
-    put("sessions", sessions)
+    val query = OqlBuilder.from(classOf[GraduateBatch], "batch")
+    query.where("batch.project = :project", getProject)
+    query.orderBy("batch.graduateOn desc,batch.name desc")
+    val batches = entityDao.search(query)
+    put("batches", batches)
     forward()
   }
 
   def search(): View = {
-    val sessionId = longId("session")
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = longId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from[Array[Any]](classOf[GraduateResult].getName, "ar")
-      .where("ar.session=:session", session)
+      .where("ar.batch=:batch", batch)
     query.join("ar.std.state.squad", "adc")
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")
@@ -55,14 +55,15 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
     }
     datas = datas.sorted(new MultiPropertyOrdering("[0].department.code,[0].code"))
     put("datas", datas)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
   def diploma(): View = {
-    val sessionId = longId("session")
+    val batchId = longId("batch")
     val squadIds = longIds("squad")
-    val query: OqlBuilder[GraduateResult] = OqlBuilder.from(classOf[GraduateResult], "ar").where("ar.session.id=:sessionId", sessionId)
+    val query = OqlBuilder.from(classOf[GraduateResult], "ar")
+      .where("ar.batch.id=:batchId", batchId)
     query.join("ar.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)
     val ars = entityDao.search(query)

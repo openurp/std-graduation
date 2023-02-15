@@ -27,7 +27,7 @@ import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad, Student}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
-import org.openurp.std.graduation.model.{DegreeResult, GraduateSession}
+import org.openurp.std.graduation.model.{DegreeResult, GraduateBatch}
 
 import scala.collection.mutable
 
@@ -39,43 +39,43 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
   var entityDao: EntityDao = _
 
   def index(): View = {
-    val query = OqlBuilder.from(classOf[GraduateSession], "session")
-    query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc,session.name desc")
-    val sessions = entityDao.search(query)
-    put("sessions", sessions)
+    val query = OqlBuilder.from(classOf[GraduateBatch], "batch")
+    query.where("batch.project = :project", getProject)
+    query.orderBy("batch.graduateOn desc,batch.name desc")
+    val batches = entityDao.search(query)
+    put("batches", batches)
     forward()
   }
 
   def report(): View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = Params.getLong("batch.id").get
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statDiploma(session, batches, Some(false))
+    val rs = helper.statDiploma(batch, batches, Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
   def search(): View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = Params.getLong("batch.id").get
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statDiploma(session, batches, Some(false))
+    val rs = helper.statDiploma(batch, batches, Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
   def detail(): View = {
-    val sessionId = longId("session")
+    val batchId = longId("batch")
     val squadIds = longIds("squad")
     val query: OqlBuilder[DegreeResult] = OqlBuilder.from(classOf[DegreeResult], "ar")
-      .where("ar.session.id=:sessionId", sessionId)
+      .where("ar.batch.id=:batchId", batchId)
       .where("ar.passed=true")
     query.join("ar.std.state.squad", "adc")
     query.where("adc.id in(:classIds)", squadIds)

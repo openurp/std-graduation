@@ -9,7 +9,7 @@
     [#assign gLists = res?sort_by(["std","code"])?chunk(20)]
     [#assign gIndex=1]
     [#list gLists  as gList]
-    <h4 width="100%" align="center" style="margin-bottom:5px">${session.project.school.name }学历、学位证书签收名册
+    <h4 width="100%" align="center" style="margin-bottom:5px">${batch.project.school.name }学历、学位证书签收名册
        <br>延长生
     </h4>
     <table class="gridtable" align="center" style="border:1px">

@@ -26,7 +26,7 @@ import org.openurp.base.std.model.Student
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree.web.helper.DocHelper
-import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateSession}
+import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateBatch}
 
 import java.time.Instant
 
@@ -41,7 +41,7 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     grs match {
       case Some(gr) =>
         val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
-        daQuery.where("da.std=:std and da.session=:session", student, gr.session)
+        daQuery.where("da.std=:std and da.batch=:batch", student, gr.batch)
         entityDao.search(daQuery).headOption match {
           case Some(da) =>
             put("degreeApply", da)
@@ -55,33 +55,33 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
     }
   }
 
-  private def getDegreeResult(std: Student, session: Option[GraduateSession]): Option[DegreeResult] = {
+  private def getDegreeResult(std: Student, batch: Option[GraduateBatch]): Option[DegreeResult] = {
     val builder = OqlBuilder.from(classOf[DegreeResult], "dr")
     builder.where("dr.std=:std", std)
     builder.where("dr.passed=true")
-    session foreach { s =>
-      builder.where("dr.session=:session", s)
+    batch foreach { s =>
+      builder.where("dr.batch=:batch", s)
     }
     //builder.where("not exists(from " + classOf[Graduation].getName + " g where g.std=dr.std and g.degree is not null)")
-    builder.orderBy("dr.session.graduateOn desc")
+    builder.orderBy("dr.batch.graduateOn desc")
     entityDao.search(builder).headOption
   }
 
   def doApply(): View = {
     val student = getStudent
-    val session = entityDao.get(classOf[GraduateSession], longId("session"))
+    val batch = entityDao.get(classOf[GraduateBatch], longId("batch"))
     val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
-    daQuery.where("da.std=:std and da.session=:session", student, session)
+    daQuery.where("da.std=:std and da.batch=:batch", student, batch)
     val da = entityDao.search(daQuery).headOption match {
       case Some(da) => da
       case None =>
         val da = new DegreeApply
-        da.session = session
+        da.batch = batch
         da.std = student
         da.degree = programProvider.getProgram(student).get.degree.get
         da
     }
-    getDegreeResult(student, Some(session)) foreach { dr =>
+    getDegreeResult(student, Some(batch)) foreach { dr =>
       da.gpa = dr.gpa
     }
     da.updatedAt = Instant.now

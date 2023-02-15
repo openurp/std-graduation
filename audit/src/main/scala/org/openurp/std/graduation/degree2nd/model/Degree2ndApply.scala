@@ -20,11 +20,11 @@ package org.openurp.std.graduation.degree2nd.model
 import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.Updated
 import org.openurp.base.std.model.Student
-import org.openurp.std.graduation.model.GraduateSession
+import org.openurp.std.graduation.model.GraduateBatch
 
 class Degree2ndApply extends LongId with Updated {
 
-  var session: GraduateSession = _
+  var batch: GraduateBatch = _
 
   var std: Student = _
 

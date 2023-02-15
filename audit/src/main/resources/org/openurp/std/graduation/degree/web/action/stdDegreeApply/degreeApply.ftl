@@ -13,7 +13,7 @@
    <tr>
       <td class="title">学制</td><td>${std.duration}年</td>
       <td class="title">入学时间</td><td>${(std.studyOn?string("yyyy年MM月dd日"))!}</td>
-      <td class="title">毕业时间</td><td>${degreeApply.session.graduateOn?string("yyyy年MM月dd日")}</td>
+      <td class="title">毕业时间</td><td>${degreeApply.batch.graduateOn?string("yyyy年MM月dd日")}</td>
    </tr>
    <tr>
       <td class="title">申请何种学位</td><td>${degreeApply.degree.name}</td>

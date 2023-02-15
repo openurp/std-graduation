@@ -17,7 +17,7 @@
     ${(squad.major.name)!} ${(squad.direction.name)!}
     [/@]
     [@b.col title="班级" width="30%" property="name"]
-     [@b.a href="!signature?session.id=${graduateSession.id}&squadIds=${squad.id}&batchNo=${Parameters['batchNo']!}" target="_blank"]${squad.name}[/@]
+     [@b.a href="!signature?batch.id=${graduateBatch.id}&squadIds=${squad.id}&batchNo=${Parameters['batchNo']!}" target="_blank"]${squad.name}[/@]
     [/@]
     [@b.col title="人数" width="10%"]
       ${squadMap.get(squad)}

@@ -27,7 +27,7 @@ import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
-import org.openurp.std.graduation.model.GraduateSession
+import org.openurp.std.graduation.model.GraduateBatch
 
 import scala.collection.mutable
 
@@ -39,23 +39,23 @@ class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
   var entityDao: EntityDao = _
 
   def index(): View = {
-    val query = OqlBuilder.from(classOf[GraduateSession], "session")
-    query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc,session.name desc")
-    val sessions = entityDao.search(query)
-    put("sessions", sessions)
+    val query = OqlBuilder.from(classOf[GraduateBatch], "batch")
+    query.where("batch.project = :project", getProject)
+    query.orderBy("batch.graduateOn desc,batch.name desc")
+    val batches = entityDao.search(query)
+    put("batches", batches)
     forward()
   }
 
   def search(): View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = Params.getLong("batch.id").get
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, Some(true), Some(false))
+    val rs = helper.statCertificate(batch, batches, Some(true), Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
@@ -67,10 +67,10 @@ class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
 
   private def collectDetails(): Unit = {
     val squadIds = longIds("squad")
-    val sessionId = longId("session")
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = longId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
-      .where("g.graduateOn =:graduateOn", session.graduateOn)
+      .where("g.graduateOn =:graduateOn", batch.graduateOn)
     query.join("g.std.state.squad", "adc")
     query.where("g.certificateNo is not null")
     query.where("g.std.state.grade = g.std.state.squad.grade") //非延长生
@@ -107,33 +107,33 @@ class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
    * 辅导员签收表
    */
   def stat(): View = {
-    val sessionId = Params.getLong("session.id").get
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = Params.getLong("batch.id").get
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(session, batches, Some(true), Some(false))
+    val rs = helper.statCertificate(batch, batches, Some(true), Some(false))
     put("squads", rs._1)
     put("squadMap", rs._2)
-    put("graduateSession", session)
+    put("graduateBatch", batch)
     forward()
   }
 
   /** 延长生签收表
    */
   def deferred(): View = {
-    val sessionId = longId("session")
-    val session = entityDao.get(classOf[GraduateSession], sessionId)
+    val batchId = longId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
-      .where("g.graduateOn =:graduateOn", session.graduateOn)
+      .where("g.graduateOn =:graduateOn", batch.graduateOn)
     query.join("g.std.state.squad", "adc")
-    query.where("g.std.graduateOn < :graduateOn", session.graduateOn) //延长生
+    query.where("g.std.graduateOn < :graduateOn", batch.graduateOn) //延长生
     query.where("g.certificateNo is not null")
     val batches = Strings.splitToInt(get("batchNo", ""))
     if (batches.nonEmpty) {
       query.where("g.batchNo in (:batches)", batches)
     }
     put("res", entityDao.search(query))
-    put("session", session)
+    put("batch", batch)
     forward()
   }
 

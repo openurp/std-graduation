@@ -1,5 +1,5 @@
 [#ftl/]
-[@b.select name="degreeApply.session.id" items=sessions label="毕业年月"/]
+[@b.select name="degreeApply.batch.id" items=batches label="毕业年月"/]
 [@b.textfield name="degreeApply.std.code" label="学号"/]
 [@b.textfield name="degreeApply.std.name" label="姓名"/]
 [@b.textfield name="degreeApply.std.state.grade" label="年级"/]

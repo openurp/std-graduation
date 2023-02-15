@@ -22,22 +22,22 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.collection.page.SinglePage
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.base.std.model.Squad
-import org.openurp.std.graduation.model.{DegreeResult, GraduateResult, GraduateSession}
+import org.openurp.std.graduation.model.{DegreeResult, GraduateResult, GraduateBatch}
 import org.openurp.base.std.model.Graduate
 
 class SquadStatHelper(entityDao: EntityDao) {
 
   /** 统计毕业证书
    *
-   * @param session
+   * @param batch
    * @param batches
    * @return
    */
-  def statCertificate(session: GraduateSession, batches: Iterable[Int], passed: Option[Boolean], deferred: Option[Boolean]):
+  def statCertificate(batch: GraduateBatch, batches: Iterable[Int], passed: Option[Boolean], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
-      .where("g.std.project=:project", session.project)
-      .where("g.graduateOn = :graduateOn", session.graduateOn)
+      .where("g.std.project=:project", batch.project)
+      .where("g.graduateOn = :graduateOn", batch.graduateOn)
 
     passed foreach { p =>
       if (p) query.where("g.certificateNo is not null")
@@ -63,20 +63,20 @@ class SquadStatHelper(entityDao: EntityDao) {
 
   /** 统计学位证书
    *
-   * @param session
+   * @param batch
    * @param batches
    * @return
    */
-  def statDiploma(session: GraduateSession, batches: Iterable[Int], deferred: Option[Boolean]):
+  def statDiploma(batch: GraduateBatch, batches: Iterable[Int], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
-      .where("g.project=:project", session.project)
-      .where("g.degreeAwardOn = :graduateOn", session.graduateOn)
+      .where("g.project=:project", batch.project)
+      .where("g.degreeAwardOn = :graduateOn", batch.graduateOn)
     query.where("g.diplomaNo is not null")
     if (batches.nonEmpty) {
       query.where(
-        "exists(from " + classOf[DegreeResult].getName + " dr where dr.session=:session and dr.std=g.std and gr.batchNo in(:batches))")
-      query.param("session", session)
+        "exists(from " + classOf[DegreeResult].getName + " dr where dr.batch=:batch and dr.std=g.std and gr.batchNo in(:batches))")
+      query.param("batch", batch)
       query.param("batches", batches)
     }
     deferred foreach { df =>

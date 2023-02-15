@@ -24,7 +24,7 @@ import org.openurp.base.model.Project
 import org.openurp.edu.grade.service.impl.BestGradeFilter
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
-import org.openurp.std.graduation.model.GraduateSession
+import org.openurp.std.graduation.model.GraduateBatch
 
 class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSupport {
 
@@ -33,8 +33,8 @@ class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSup
   override def indexSetting(): Unit = {
     given project: Project = getProject
 
-    val query = OqlBuilder.from(classOf[GraduateSession], "gs")
-    put("sessions", entityDao.search(query))
+    val query = OqlBuilder.from(classOf[GraduateBatch], "gs")
+    put("batches", entityDao.search(query))
     put("departs", getDeparts)
   }
 

@@ -27,7 +27,7 @@ import org.beangle.webmvc.support.helper.{PopulateHelper, QueryHelper}
 import org.openurp.base.model.Project
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DocHelper}
-import org.openurp.std.graduation.model.{DegreeApply, GraduateSession}
+import org.openurp.std.graduation.model.{DegreeApply, GraduateBatch}
 
 /** 学位申请审核
  */
@@ -36,11 +36,11 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupp
   override def indexSetting(): Unit = {
     given project: Project = getProject
 
-    val query = OqlBuilder.from(classOf[GraduateSession], "session")
-    query.where("session.project = :project", getProject)
-    query.orderBy("session.graduateOn desc,session.name desc")
-    val sessions = entityDao.search(query)
-    put("sessions", sessions)
+    val query = OqlBuilder.from(classOf[GraduateBatch], "batch")
+    query.where("batch.project = :project", getProject)
+    query.orderBy("batch.graduateOn desc,batch.name desc")
+    val batches = entityDao.search(query)
+    put("batches", batches)
     put("departs", getDeparts)
   }
 
