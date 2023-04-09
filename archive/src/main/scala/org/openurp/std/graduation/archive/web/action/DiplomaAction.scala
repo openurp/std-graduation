@@ -22,6 +22,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.context.Params
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad, Student}
@@ -34,7 +35,7 @@ import scala.collection.mutable
 /** 学位证签收表
  *
  */
-class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
+class DiplomaAction extends ActionSupport, EntityAction[DegreeResult], ProjectSupport {
 
   var entityDao: EntityDao = _
 
@@ -72,8 +73,8 @@ class DiplomaAction extends EntityAction[DegreeResult] with ProjectSupport {
   }
 
   def detail(): View = {
-    val batchId = longId("batch")
-    val squadIds = longIds("squad")
+    val batchId = getLongId("batch")
+    val squadIds = getLongIds("squad")
     val query: OqlBuilder[DegreeResult] = OqlBuilder.from(classOf[DegreeResult], "ar")
       .where("ar.batch.id=:batchId", batchId)
       .where("ar.passed=true")

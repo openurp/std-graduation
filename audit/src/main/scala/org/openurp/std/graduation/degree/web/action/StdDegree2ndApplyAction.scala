@@ -17,19 +17,21 @@
 
 package org.openurp.std.graduation.degree.web.action
 
-import java.time.Instant
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.mapping
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
 import org.openurp.edu.grade.service.impl.BestGradeFilter
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.model.{GraduateResult, GraduateBatch}
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
+import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 
-class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectSupport {
+import java.time.Instant
+
+class StdDegree2ndApplyAction extends ActionSupport, EntityAction[Degree2ndApply], ProjectSupport {
   var entityDao: EntityDao = _
   var bestGradeFilter: BestGradeFilter = _
 
@@ -66,7 +68,7 @@ class StdDegree2ndApplyAction extends EntityAction[Degree2ndApply] with ProjectS
 
   def doApply(): View = {
     val student = getStudent
-    val batch = entityDao.get(classOf[GraduateBatch], longId("batch"))
+    val batch = entityDao.get(classOf[GraduateBatch], getLongId("batch"))
     val daQuery = OqlBuilder.from(classOf[Degree2ndApply], "da")
     daQuery.where("da.std=:std and da.batch=:batch", student, batch)
     val da = entityDao.search(daQuery).headOption match {

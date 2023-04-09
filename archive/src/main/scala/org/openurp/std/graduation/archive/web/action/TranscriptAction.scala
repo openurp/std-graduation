@@ -21,15 +21,16 @@ import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.context.Params
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.model.User
 import org.openurp.base.std.model.Graduate
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.archive.web.helper.SquadStatHelper
-import org.openurp.std.graduation.model.{GraduateResult, GraduateBatch}
+import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 
-class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport {
+class TranscriptAction extends ActionSupport, EntityAction[GraduateResult], ProjectSupport {
 
   var entityDao: EntityDao = _
 
@@ -48,15 +49,18 @@ class TranscriptAction extends EntityAction[GraduateResult] with ProjectSupport 
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
     val rs = helper.statCertificate(batch, batches, getBoolean("passed"), None)
-    put("squads", rs._1)
+    val squads = get("squadName") match
+      case None => rs._1
+      case Some(name) => if (Strings.isNotBlank(name)) rs._1.filter(_.name.contains(name)) else rs._1
+    put("squads", squads)
     put("squadMap", rs._2)
     put("graduateBatch", batch)
     forward()
   }
 
   def detail(): View = {
-    val batchId = longId("batch")
-    val squadIds = longIds("squad")
+    val batchId = getLongId("batch")
+    val squadIds = getLongIds("squad")
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn=:graduateOn", batch.graduateOn)

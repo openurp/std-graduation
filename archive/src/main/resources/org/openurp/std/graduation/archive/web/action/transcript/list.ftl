@@ -9,10 +9,10 @@
     [@b.col title="序号" width="5%"]${squad_index+1}[/@]
     [@b.col title="院系" width="15%" property="department.name"/]
     [@b.col title="年级" width="10%" property="grade"/]
-    [@b.col title="专业" width="25%"]
+    [@b.col title="专业"]
     ${(squad.major.name)!} ${(squad.direction.name)!}
     [/@]
-    [@b.col title="班级" width="30%" property="name"]
+    [@b.col title="班级" property="name"]
      [@b.a href="!detail?batch.id=${graduateBatch.id}&squadIds=${squad.id}&batchNo=${Parameters['batchNo']!}&passed=${Parameters['passed']!}&printer=${Parameters['printer']!}" target="_blank"]${squad.name}[/@]
     [/@]
     [@b.col title="人数" width="10%"]

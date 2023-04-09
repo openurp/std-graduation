@@ -22,7 +22,7 @@ import org.beangle.data.orm.hibernate.QuerySupport
 import org.beangle.data.transfer.exporter.ExportSetting
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.{PopulateHelper, QueryHelper}
 import org.openurp.base.model.Project
 import org.openurp.starter.web.support.ProjectSupport
@@ -31,7 +31,7 @@ import org.openurp.std.graduation.model.{DegreeApply, GraduateBatch}
 
 /** 学位申请审核
  */
-class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupport {
+class DegreeApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[DegreeApply], ProjectSupport {
 
   override def indexSetting(): Unit = {
     given project: Project = getProject
@@ -51,7 +51,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupp
   }
 
   def download(): View = {
-    val apply = entityDao.get(classOf[DegreeApply], longId("degreeApply"))
+    val apply = entityDao.get(classOf[DegreeApply], getLongId("degreeApply"))
     val bytes = DocHelper.toDoc(apply)
     val std = apply.std
     val title = s"${std.code}_${std.name}学位申请表"
@@ -67,7 +67,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply] with ProjectSupp
 
   @ignore
   override def configExport(setting: ExportSetting): Unit = {
-    val selectIds = ids(simpleEntityName,classOf[Long])
+    val selectIds = getLongIds(simpleEntityName)
     val items =
       if (selectIds.isEmpty) {
         val builder = getQueryBuilder

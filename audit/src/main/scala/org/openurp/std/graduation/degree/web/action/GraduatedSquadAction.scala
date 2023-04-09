@@ -20,6 +20,7 @@ package org.openurp.std.graduation.degree.web.action
 import org.beangle.commons.bean.orderings.MultiPropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad, Student}
@@ -28,7 +29,7 @@ import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 
 import scala.collection.mutable
 
-class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupport {
+class GraduatedSquadAction extends ActionSupport, EntityAction[GraduateResult], ProjectSupport {
 
   var entityDao: EntityDao = _
 
@@ -42,7 +43,7 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
   }
 
   def search(): View = {
-    val batchId = longId("batch")
+    val batchId = getLongId("batch")
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from[Array[Any]](classOf[GraduateResult].getName, "ar")
       .where("ar.batch=:batch", batch)
@@ -60,8 +61,8 @@ class GraduatedSquadAction extends EntityAction[GraduateResult] with ProjectSupp
   }
 
   def diploma(): View = {
-    val batchId = longId("batch")
-    val squadIds = longIds("squad")
+    val batchId = getLongId("batch")
+    val squadIds = getLongIds("squad")
     val query = OqlBuilder.from(classOf[GraduateResult], "ar")
       .where("ar.batch.id=:batchId", batchId)
     query.join("ar.std.state.squad", "adc")

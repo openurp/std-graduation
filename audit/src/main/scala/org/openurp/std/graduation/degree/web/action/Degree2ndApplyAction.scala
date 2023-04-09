@@ -19,14 +19,14 @@ package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.RestfulAction
+import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Project
 import org.openurp.edu.grade.service.impl.BestGradeFilter
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.degree2nd.model.Degree2ndApply
 import org.openurp.std.graduation.model.GraduateBatch
 
-class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSupport {
+class Degree2ndApplyAction extends RestfulAction[Degree2ndApply], ExportSupport[Degree2ndApply], ProjectSupport {
 
   var bestGradeFilter: BestGradeFilter = _
 
@@ -39,7 +39,7 @@ class Degree2ndApplyAction extends RestfulAction[Degree2ndApply] with ProjectSup
   }
 
   def recalc(): View = {
-    val ids = longIds("degree2ndApply")
+    val ids = getLongIds("degree2ndApply")
     val applies = entityDao.find(classOf[Degree2ndApply], ids)
     val helper = new CommonGradeHelper(entityDao, bestGradeFilter)
     applies foreach { apply =>

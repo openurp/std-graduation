@@ -22,6 +22,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.web.action.context.Params
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad}
@@ -34,7 +35,7 @@ import scala.collection.mutable
 /** 毕业证签收表
  *
  */
-class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
+class CertificateAction extends ActionSupport, EntityAction[Graduate], ProjectSupport {
 
   var entityDao: EntityDao = _
 
@@ -66,8 +67,8 @@ class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
   }
 
   private def collectDetails(): Unit = {
-    val squadIds = longIds("squad")
-    val batchId = longId("batch")
+    val squadIds = getLongIds("squad")
+    val batchId = getLongId("batch")
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn =:graduateOn", batch.graduateOn)
@@ -121,7 +122,7 @@ class CertificateAction extends EntityAction[Graduate] with ProjectSupport {
   /** 延长生签收表
    */
   def deferred(): View = {
-    val batchId = longId("batch")
+    val batchId = getLongId("batch")
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from(classOf[Graduate], "g")
       .where("g.graduateOn =:graduateOn", batch.graduateOn)

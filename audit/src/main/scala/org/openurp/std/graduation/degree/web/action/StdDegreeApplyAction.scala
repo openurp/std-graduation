@@ -20,6 +20,7 @@ package org.openurp.std.graduation.degree.web.action
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{mapping, param}
+import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.{Status, View}
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
@@ -30,7 +31,7 @@ import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateBatc
 
 import java.time.Instant
 
-class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport {
+class StdDegreeApplyAction extends ActionSupport, EntityAction[DegreeApply], ProjectSupport {
   var entityDao: EntityDao = _
   var programProvider: ProgramProvider = _
 
@@ -69,7 +70,7 @@ class StdDegreeApplyAction extends EntityAction[DegreeApply] with ProjectSupport
 
   def doApply(): View = {
     val student = getStudent
-    val batch = entityDao.get(classOf[GraduateBatch], longId("batch"))
+    val batch = entityDao.get(classOf[GraduateBatch], getLongId("batch"))
     val daQuery = OqlBuilder.from(classOf[DegreeApply], "da")
     daQuery.where("da.std=:std and da.batch=:batch", student, batch)
     val da = entityDao.search(daQuery).headOption match {
