@@ -19,14 +19,14 @@ package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.data.orm.hibernate.QuerySupport
-import org.beangle.data.transfer.exporter.ExportSetting
+import org.beangle.data.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.ignore
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.{PopulateHelper, QueryHelper}
 import org.openurp.base.model.Project
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DocHelper}
+import org.openurp.std.graduation.degree.web.helper.{ApplyDataConvertor, DegreeDocHelper}
 import org.openurp.std.graduation.model.{DegreeApply, GraduateBatch}
 
 /** 学位申请审核
@@ -52,7 +52,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[D
 
   def download(): View = {
     val apply = entityDao.get(classOf[DegreeApply], getLongId("degreeApply"))
-    val bytes = DocHelper.toDoc(apply)
+    val bytes = DegreeDocHelper.toDoc(apply)
     val std = apply.std
     val title = s"${std.code}_${std.name}学位申请表"
     val filename = new String(title.getBytes, "ISO8859-1")
@@ -66,7 +66,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[D
   }
 
   @ignore
-  override def configExport(setting: ExportSetting): Unit = {
+  override def configExport(context: ExportContext): Unit = {
     val selectIds = getLongIds(simpleEntityName)
     val items =
       if (selectIds.isEmpty) {
@@ -78,7 +78,7 @@ class DegreeApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[D
     val sorted = items.toBuffer.sortWith((x, y) => x.std.code.compare(y.std.code) < 0)
     import scala.jdk.javaapi.CollectionConverters.*
     val applies = sorted.map(x => asJava(ApplyDataConvertor.convert(x)))
-    setting.context.put("school", getProject.school.name)
-    setting.context.put("applies", applies)
+    context.put("school", getProject.school.name)
+    context.put("applies", applies)
   }
 }

@@ -5,13 +5,13 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
-         <span class="glyphicon glyphicon-bookmark"></span>${degreeApply.school.name}<span style="font-size:0.8em">(${degreeApply.beginOn?string("yyyy-MM")}~${degreeApply.endOn?string("yyyy-MM")})</span>
+         <i class="fa-solid fa-graduation-cap"></i>${degreeApply.school.name}<span style="font-size:0.8em">(${degreeApply.beginOn?string("yyyy-MM")}~${degreeApply.endOn?string("yyyy-MM")})</span>
          [#if degreeApply.state!="通过"]
          <div class="btn-group">
          [@b.a onclick="return audit('${degreeApply.id}',1)" class="btn btn-sm btn-info"]<span class="glyphicon glyphicon-edit"></span>审核通过[/@]
          </div>
          [/#if]
-         [@b.a onclick="return audit('${degreeApply.id}',0)" class="btn btn-sm btn-warning"]<span class="glyphicon glyphicon-remove"></span>退回修改[/@]
+         [@b.a onclick="return audit('${degreeApply.id}',0)" class="btn btn-sm btn-warning"]<i class="fa-solid fa-xmark"></i>退回修改[/@]
     </h3>
   </div>
 [#assign std= degreeApply.std/]
@@ -37,7 +37,7 @@
       <td>${degreeApply.credits}分,冲抵${degreeApply.exemptionCredits}分</td>
       <td class="title">成绩材料：</td>
       <td>[#if transcriptPath??]
-         <a href="${transcriptPath}" target="_blank"><span class="glyphicon glyphicon-download"></span>下载附件</a>
+         <a href="${transcriptPath}" target="_blank"><i class="fa-solid fa-download"></i>下载附件</a>
          [#else]--[/#if]
       </td>
       <td class="title">审核状态：</td>

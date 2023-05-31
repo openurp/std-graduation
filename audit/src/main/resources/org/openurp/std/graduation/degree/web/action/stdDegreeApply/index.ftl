@@ -14,20 +14,20 @@
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-book"></span>学位申请</a>
+        <a class="navbar-brand" href="#"><i class="fa-solid fa-graduation-cap"></i>学位申请</a>
     </div>
   </div>
 </nav>
   [#if degreeApply??]
   [@b.form name="removeApplyForm_"+degreeApply.id  action="!remove?id="+degreeApply.id+"&_method=delete"][/@]
   [#assign title]
-     <span class="glyphicon glyphicon-bookmark"></span>${degreeApply.batch.name}<span style="font-size:0.8em">(${degreeApply.batch.graduateOn?string("yyyy-MM")}毕业)</span>
+     <i class="fa-solid fa-graduation-cap"></i>${degreeApply.batch.name}<span style="font-size:0.8em">(${degreeApply.batch.graduateOn?string("yyyy-MM")}毕业)</span>
      [#if degreeApply.passed!false]审核通过
      [#else]
       <div class="btn-group">
-      [@b.a href="!download?id="+degreeApply.id target="_blank" class="btn btn-sm btn-info"]<span class="glyphicon glyphicon-download"></span>下载申请表[/@]
+      [@b.a href="!download?id="+degreeApply.id target="_blank" class="btn btn-sm btn-info"]<i class="fa-solid fa-download"></i>下载申请表[/@]
       </div>
-       [@b.a href="!remove?id="+degreeApply.id onclick="return removeApply(${degreeApply.id});" class="btn btn-sm btn-warning"]<span class="glyphicon glyphicon-remove"></span>删除[/@]
+       [@b.a href="!remove?id="+degreeApply.id onclick="return removeApply(${degreeApply.id});" class="btn btn-sm btn-warning"]<i class="fa-solid fa-xmark"></i>删除[/@]
      [/#if]
   [/#assign]
   [@panel title=title]

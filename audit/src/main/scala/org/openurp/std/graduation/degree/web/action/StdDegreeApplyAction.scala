@@ -18,6 +18,7 @@
 package org.openurp.std.graduation.degree.web.action
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.ems.app.web.WebBusinessLogger
 import org.beangle.security.Securities
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.support.ActionSupport
@@ -26,7 +27,7 @@ import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
 import org.openurp.edu.program.domain.ProgramProvider
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.degree.web.helper.DocHelper
+import org.openurp.std.graduation.degree.web.helper.DegreeDocHelper
 import org.openurp.std.graduation.model.{DegreeApply, DegreeResult, GraduateBatch}
 
 import java.time.Instant
@@ -34,6 +35,7 @@ import java.time.Instant
 class StdDegreeApplyAction extends ActionSupport, EntityAction[DegreeApply], ProjectSupport {
   var entityDao: EntityDao = _
   var programProvider: ProgramProvider = _
+  var businessLogger: WebBusinessLogger = _
 
   def index(): View = {
     val student = getStudent
@@ -87,6 +89,7 @@ class StdDegreeApplyAction extends ActionSupport, EntityAction[DegreeApply], Pro
     }
     da.updatedAt = Instant.now
     entityDao.saveOrUpdate(da)
+    businessLogger.info("申请了学位", student.id, Map("degree.name" -> da.degree.name, "gpa" -> da.gpa.toString))
     redirect("index", "info.save.success")
   }
 
@@ -95,7 +98,7 @@ class StdDegreeApplyAction extends ActionSupport, EntityAction[DegreeApply], Pro
     val apply = entityDao.get(classOf[DegreeApply], id.toLong)
     val std = getStudent
     if (std == apply.std) {
-      val bytes = DocHelper.toDoc(apply)
+      val bytes = DegreeDocHelper.toDoc(apply)
       val title = s"${std.code}_${std.name}学位申请表"
       val filename = new String(title.getBytes, "ISO8859-1")
       response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
@@ -117,6 +120,7 @@ class StdDegreeApplyAction extends ActionSupport, EntityAction[DegreeApply], Pro
     val std = getStudent
     if (da.std == std && !da.passed.getOrElse(false)) {
       entityDao.remove(da)
+      businessLogger.info("删除学位申请", da.id, Map("degree.name" -> da.degree.name, "gpa" -> da.gpa.toString))
       redirect("index", "info.remove.success")
     } else {
       redirect("index", "删除失败")
