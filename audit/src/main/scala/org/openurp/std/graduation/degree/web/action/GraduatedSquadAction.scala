@@ -29,6 +29,9 @@ import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 
 import scala.collection.mutable
 
+/**
+ * 毕业班级统计
+ */
 class GraduatedSquadAction extends ActionSupport, EntityAction[GraduateResult], ProjectSupport {
 
   var entityDao: EntityDao = _
