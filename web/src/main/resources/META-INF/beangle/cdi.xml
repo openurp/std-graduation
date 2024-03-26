@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<cdi>
-  <container>
-    <module class="org.openurp.starter.web.ProjectModule" />
-    <module class="org.openurp.std.graduation.audit.service.DefaultModule" />
-    <module class="org.beangle.serializer.text.DefaultModule"/>
-    <module class="org.beangle.serializer.json.DefaultModule"/>
-  </container>
-</cdi>

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<cdi>
-  <container>
-    <module class="org.openurp.std.graduation.degree.web.action.DefaultModule" />
-    <module class="org.openurp.edu.grade.service.DefaultModule" />
-  </container>
-</cdi>
