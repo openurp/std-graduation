@@ -25,7 +25,8 @@
       [@b.col title="班级" property="groupResult.planResult.std.state.squad.name"  width="8%"]
         <div class="text-ellipsis">${(result.groupResult.planResult.std.state.squad.name)!}</div>
       [/@]
-      [@b.col title="课程名称" property="course.name" width="17%"]<span title="${result.course.code} ${result.course.defaultCredits}分">${result.course.name}</span>[/@]
+      [@b.col title="课程名称" property="course.name" width="17%"]
+      <span title="${result.course.code} ${result.course.defaultCredits}分">${result.course.code} ${result.course.name}</span>[/@]
       [@b.col title="课程类别" property="groupResult.courseType.name" width="15%"/]
       [@b.col title="成绩" property="scores" width="6%"/]
       [@b.col title="备注" property="remark" style="text-align:left;padding-left:7px;"]

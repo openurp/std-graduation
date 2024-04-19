@@ -17,16 +17,16 @@
   [@b.col title="专业" property="std.state.major.name" width="8%" ]
     <div class="text-ellipsis">${(result.std.state.major.name)!}</div>
   [/@]
-  [@b.col title="应修" property="auditStat.requiredCredits" width="6%"/]
-  [@b.col title="缺口" property="neededCredits" width="6%"] [#if result.neededCredits>0]${result.neededCredits}[/#if] [/@]
-  [@b.col title="在读" property="auditStat.takingCredits" width="6%"][#if result.auditStat.takingCredits>0]${result.auditStat.takingCredits}[/#if][/@]
+  [@b.col title="应修" property="requiredCredits" width="6%"/]
+  [@b.col title="缺分" property="owedCredits" width="5%"] [#if result.owedCredits>0]${result.owedCredits}[/#if] [/@]
+  [@b.col title="预计缺" property="owedCredits3" width="5%"] [#if result.owedCredits3>0]${result.owedCredits3}[/#if] [/@]
   [@b.col title="结果" property="passed" width="7%"]
     [@b.a href="!info?id=" + result.id title="查看审核结果" target="_blank"]${result.passed?string("完成","<font color='red'>未完成</font>")}[/@]
   [/@]
   [@b.col title="未完成学分"]
     <div class="text-ellipsis">
     [#list result.groupResults?sort_by("indexno") as r]
-      [#if (!r.parent?? || !(r.parent.parent??)) && !r.passed && !r.predicted && r.auditStat.neededCredits>0]${r.courseType.name}${r.auditStat.neededCredits}分&nbsp;[/#if]
+      [#if (!r.parent?? || !(r.parent.parent??)) && !r.passed && !r.predicted && r.owedCredits>0]${r.courseType.name}${r.owedCredits}分&nbsp;[/#if]
     [/#list]
     </div>
   [/@]

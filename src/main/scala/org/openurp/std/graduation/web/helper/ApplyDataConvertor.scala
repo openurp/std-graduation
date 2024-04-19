@@ -49,6 +49,7 @@ object ApplyDataConvertor {
     data.put("degree", apply.degree.name)
     data.put("studyOn", std.studyOn.format(formatter))
     data.put("graduateOn", apply.batch.graduateOn.format(formatter))
+    //FIXME 晚于评定日期apply.batch.graduateOn
     data.put("applyOn", apply.updatedAt.atZone(ZoneId.systemDefault()).toLocalDate.format(formatter))
 
     val formatter2 = DateTimeFormatter.ofPattern("yyyy 年 M 月 d 日")

@@ -1,6 +1,6 @@
 [#ftl/]
 [@b.head/]
-[@b.toolbar title="计划完成审核"/]
+[@b.toolbar title="毕业审核"/]
 
 <div class="search-container">
   <div class="search-panel">

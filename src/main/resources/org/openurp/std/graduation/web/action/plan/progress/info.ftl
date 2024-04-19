@@ -25,16 +25,16 @@
     <td class="title">层次/类别:</td>
     <td class="content">${std.level.name} / ${std.stdType.name}</td>
     <td class="title">要求/实修:</td>
-    <td class="content">${result.auditStat.requiredCredits}&nbsp;/&nbsp;${result.auditStat.passedCredits}</td>
+    <td class="content">${result.requiredCredits}&nbsp;/&nbsp;${result.passedCredits}</td>
     <td class="title">更新时间:</td>
     <td class="content">${(result.updatedAt?string('yyyy-MM-dd HH:mm:ss'))!}
    </tr>
-   [#if result.auditStat.predictedCredits>0 || result.auditStat.takingCredits>0]
+   [#if result.owedCredits>0]
    <tr>
      <td class="title">学分缺口:</td>
-     <td><span style="color:red">${result.neededCredits}分</span>[#if result.auditStat.takingCredits>0](在读课程通过后，[#if result.neededCredits3>0]<span style="color:red">缺${result.neededCredits3}分</span>[#else]可完成计划[/#if])[/#if]</td>
+     <td><span style="color:red">${result.owedCredits}分</span>[#if result.owedCredits!=result.owedCredits3](在读课程通过后，[#if result.owedCredits3>0]<span style="color:red">缺${result.owedCredits3}分</span>[#else]可完成计划[/#if])[/#if]</td>
      <td class="title">预计说明:</td>
-     <td colspan="3" class="text-muted">【预计可通过】表示如果毕业论文等成绩通过后，计划审核的预计结果</td>
+     <td colspan="3" class="text-muted">表示如果毕业论文等成绩通过后，计划审核的预计结果</td>
    </tr>
    [/#if]
   </table>
@@ -58,7 +58,8 @@
 <br><br>
 [#macro groupsData courseGroups,lastNum]
   [#list courseGroups as group]
-    [#if group.courseResults?size==0 && group.auditStat.requiredCredits==0 && group.passed && (!group.parent?? || group.parent.passed)]//如果上级组通过，忽略0分的组
+    [#if group.courseResults?size==0 && group.requiredCredits==0 && group.passed && (!group.parent?? || group.parent.passed)]
+      [#--//如果上级组通过，忽略0分的组--]
       [#continue/]
     [/#if]
     <tr class="darkColumn" style="font-weight: bold">
@@ -66,26 +67,27 @@
         [#list 1..lastNum as d][/#list]${sg.next(lastNum?int)}&nbsp;${(group.name)?if_exists}
         [#if group.parent?? && !group.passed]
         <span style="color:#f1948a;font-weight: normal;">
-        [#if group.auditStat.neededCredits>0](缺${group.auditStat.neededCredits}分)[/#if]
-        [#if group.neededGroups>0](要求${group.subCount}组 缺${group.neededGroups}组)[/#if]
+        [#assign displayed=false/]
+        [#if group.owedCredits>0](缺${group.owedCredits}分)[#assign displayed=true/][/#if]
+        [#if group.neededGroups>0](要求${group.subCount}组 缺${group.neededGroups}组)[#assign displayed=true/][/#if]
+        [#if !displayed]必修课未完成[/#if]
         </span>
         [/#if]
       </td>
-      <td align="center">${(group.auditStat.requiredCredits)?default('')}</td>
-      <td align="center">${(group.auditStat.passedCredits)?default('')} [#if ((group.auditStat.convertedCredits)>0)](转换${(group.auditStat.convertedCredits)}分)[/#if]</td>
+      <td align="center">${(group.requiredCredits)?default('')}</td>
+      <td align="center">${(group.passedCredits)?default('')} [#if ((group.convertedCredits)>0)](转换${(group.convertedCredits)}分)[/#if]</td>
       <td></td>
       <td align="center">
-          [#assign neededCredits = group.neededCreditsAt(passedLevel)/]
         [#if group.passed]是[#elseif !group.parent??]
           <span style="[#if group.predicted]color:#f1948a;[#else]color:red;[/#if][#if group.parent??]font-weight: normal;[/#if]">
-          [#if neededCredits>0]缺${neededCredits}分[/#if]
+          缺${group.owedCredits}分
           </span>
         [/#if]
       </td>
       <td align="center">&nbsp;
         [#if !group.passed && !group.parent??]
           <span class="text-muted" style="font-weight: normal;">
-            [#if group.predicted]预计可通过[#else] [#assign neededTakingCredits=group.neededCreditsAt(takingLevel)/][#if neededTakingCredits>0]预计缺${neededTakingCredits}分[/#if][/#if]
+            [#if group.predicted]预计可通过[#else] [#if group.owedCredits3>0]预计缺${group.owedCredits3}分[/#if][/#if]
           </span>
         [/#if]
       </td>
@@ -101,12 +103,16 @@
          <td align="center">[#if coursePassed]${(courseResult.course.getCredits(std.level))?default('')}[#else]0[/#if]</td>
          <td align="center">${courseResult.scores!}</td>
          <td align="center">
-           [#if courseResult.scores!='--' && !courseResult.passed]
-            [#if group.passed]<span class="text-muted">否</span>
-            [#elseif courseResult.taking]<span style="color:#f1948a;">否</span>
-            [#else]<span style="color:red">否</span>
-            [/#if]
+         [#if !courseResult.passed]
+           [#if courseResult.scores!='--']
+             [#if group.passed]<span class="text-muted">否</span>
+             [#elseif courseResult.taking]<span style="color:#f1948a;">否</span>
+             [#else]<span style="color:red">否</span>
+             [/#if]
+           [#elseif courseResult.compulsory]
+             <span style="color:[#if group.predicted]#f1948a;[#else]red[/#if]">否<sup>必</sup></span>
            [/#if]
+         [/#if]
          </td>
          <td align="center">${courseResult.remark?if_exists}</td>
      </tr>

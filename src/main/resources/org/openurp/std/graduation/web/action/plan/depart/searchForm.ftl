@@ -1,8 +1,8 @@
 [#ftl/]
 <tbody>
   <input type="hidden" name="audited" value="1" />
-  [@b.select label="批次" name="batch.id" items=batches value=batches?first.id /]
-  [@b.textfield name="result.std.code" label="学号" /]
+  [@b.select label="批次" name="batch.id" items=batches value=batches?first/]
+  [@b.textfield name="result.std.code" label="学号" maxlength="50000"/]
   [@b.textfield name="result.std.name" label="姓名" /]
   [@b.textfield name="result.std.state.grade.code" label="年级" /]
   [@b.select name="result.std.level.id" items=levels label="培养层次" empty="..."/]
@@ -15,10 +15,10 @@
     <option value="1">是</option>
     <option value="0">否</option>
   [/@]
-  [@b.select name="predicted" label="预计情况"]
+  [@b.select name="predicted" label="预审情况"]
     <option value="">...</option>
-    <option value="passed">预计通过</option>
-    <option value="unpassed">预计不通过</option>
+    <option value="passed">预审通过</option>
+    <option value="unpassed">预审不通过</option>
     <option value="takingPassed">在读及格后通过</option>
     <option value="takingFailed">在读及格后仍不通过</option>
   [/@]

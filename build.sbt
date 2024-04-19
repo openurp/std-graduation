@@ -24,10 +24,10 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std graduation"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-graduation/index.html"))
 
-val apiVer = "0.37.4-SNAPSHOT"
-val starterVer = "0.3.28-SNAPSHOT"
-val baseVer = "0.4.21-SNAPSHOT"
-val eduCoreVer = "0.2.1-SNAPSHOT"
+val apiVer = "0.38.1-SNAPSHOT"
+val starterVer = "0.3.30"
+val baseVer = "0.4.22"
+val eduCoreVer = "0.2.2-SNAPSHOT"
 val stdCoreVer = "0.0.1-SNAPSHOT"
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
@@ -49,6 +49,6 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag),
     libraryDependencies ++= Seq(openurp_edu_core,openurp_std_core),
     libraryDependencies ++= Seq(ojdbc11,orai18n),
-    libraryDependencies ++= Seq(beangle_serializer_text, beangle_doc_docx)
+    libraryDependencies ++= Seq(beangle_doc_docx)
   )
 

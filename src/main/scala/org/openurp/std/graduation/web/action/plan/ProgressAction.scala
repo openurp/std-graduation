@@ -19,10 +19,11 @@ package org.openurp.std.graduation.web.action.plan
 
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.web.action.annotation.{mapping, param}
 import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
-import org.beangle.webmvc.support.action.EntityAction
+import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.EducationLevel
 import org.openurp.code.std.model.StdType
@@ -30,14 +31,17 @@ import org.openurp.edu.grade.model.{AuditCourseLevel, AuditCourseResult, AuditGr
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.GraduateResult
 import org.openurp.std.graduation.service.GraduateService
+import org.openurp.std.graduation.web.helper.AuditPlanResultPropertyExtractor
 
 import java.time.LocalDate
 import scala.collection.mutable
 
-class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], ProjectSupport {
+class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], ProjectSupport, ExportSupport[AuditPlanResult] {
 
   var entityDao: EntityDao = _
   var graduateService: GraduateService = _
+
+  override def simpleEntityName: String = "result"
 
   def index(): View = {
     given project: Project = getProject
@@ -62,8 +66,8 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
     get("predicted", "") match
       case "passed" => builder.where("result.predicted=true")
       case "unpassed" => builder.where("result.predicted=false")
-      case "takingPassed" => builder.where("result.predicted=false and result.takingPassed=true")
-      case "takingFailed" => builder.where("result.takingPassed=false")
+      case "takingPassed" => builder.where("result.predicted=false and result.owedCredits3=0")
+      case "takingFailed" => builder.where("result.owedCredits3>0")
       case _ =>
     getLong("batch.id") foreach { batchId =>
       builder.where(s"exists(from ${classOf[GraduateResult].getName} gr where gr.std=result.std and gr.batch.id=:batchId)", batchId)
@@ -104,5 +108,9 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
     forward()
   }
 
-  override def simpleEntityName: String = "result"
+  override protected def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new AuditPlanResultPropertyExtractor
+  }
+
 }

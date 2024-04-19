@@ -35,5 +35,8 @@ class DefaultModule extends BindModule {
     bind(classOf[plan.FailCourseAction])
     bind(classOf[plan.ProgressAction])
     bind(classOf[plan.DepartAction])
+
+    bind(classOf[graduate.AuditAction])
   }
+
 }
