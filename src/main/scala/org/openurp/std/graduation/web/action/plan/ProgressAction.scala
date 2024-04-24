@@ -63,12 +63,19 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
       if (active) builder.where("result.std.beginOn <= :now and result.std.endOn >= :now and result.std.registed = true  and result.std.state.inschool=true", nowAt)
       else builder.where("result.std.beginOn > :now or result.std.endOn < :now or result.std.registed=false or result.std.state.inschool=false", nowAt)
     }
-    get("predicted", "") match
+    get("predicted", "") match {
       case "passed" => builder.where("result.predicted=true")
       case "unpassed" => builder.where("result.predicted=false")
       case "takingPassed" => builder.where("result.predicted=false and result.owedCredits3=0")
       case "takingFailed" => builder.where("result.owedCredits3>0")
       case _ =>
+    }
+    getFloat("requiredCredits.from") foreach { f => builder.where("result.requiredCredits >= :cr1", f) }
+    getFloat("requiredCredits.to") foreach { f => builder.where("result.requiredCredits <= :cr1", f) }
+
+    getFloat("passedCredits.from") foreach { f => builder.where("result.passedCredits >= :cr1", f) }
+    getFloat("passedCredits.to") foreach { f => builder.where("result.passedCredits <= :cr1", f) }
+
     getLong("batch.id") foreach { batchId =>
       builder.where(s"exists(from ${classOf[GraduateResult].getName} gr where gr.std=result.std and gr.batch.id=:batchId)", batchId)
     }

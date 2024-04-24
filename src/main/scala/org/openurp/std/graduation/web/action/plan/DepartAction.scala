@@ -18,7 +18,8 @@
 package org.openurp.std.graduation.web.action.plan
 
 import org.beangle.web.action.view.View
-import org.openurp.edu.grade.model.AuditPlanResult
+import org.openurp.base.std.model.Student
+import org.openurp.edu.grade.model.{AuditCourseLevel, AuditPlanResult}
 import org.openurp.edu.grade.service.AuditPlanService
 
 class DepartAction extends ProgressAction {
@@ -28,5 +29,21 @@ class DepartAction extends ProgressAction {
     val results = entityDao.find(classOf[AuditPlanResult], getLongIds("result"))
     auditPlanService.batchAudit(results.map(_.std), Map.empty)
     redirect("search", "审核成功")
+  }
+
+  /** 查看最新结果
+   *
+   * @return
+   */
+  def lastest(): View = {
+    val std = entityDao.get(classOf[Student], getLongId("student"))
+    val persist = getBoolean("persist", false)
+    val result = auditPlanService.audit(std, Map.empty, persist)
+    put("result", result)
+    put("sg", SeqHelper.getGenerator)
+    put("passedLevel", AuditCourseLevel.Passed)
+    put("predictedLevel", AuditCourseLevel.Predicted)
+    put("takingLevel", AuditCourseLevel.Taking)
+    forward("info")
   }
 }

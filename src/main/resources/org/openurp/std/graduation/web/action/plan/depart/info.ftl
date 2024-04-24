@@ -28,7 +28,12 @@
     <td class="title">要求/实修:</td>
     <td class="content">${result.requiredCredits}&nbsp;/&nbsp;${result.passedCredits}</td>
     <td class="title">更新时间:</td>
-    <td class="content">${(result.updatedAt?string('yyyy-MM-dd HH:mm:ss'))!}</td>
+    <td class="content">
+    [#if result.persisted]
+      ${(result.updatedAt?string('yyyy-MM-dd HH:mm:ss'))!}
+      [@b.a href="!lastest?student.id="+result.std.id]最新计划完成情况[/@]
+    [/#if]
+    </td>
    </tr>
    [#if result.owedCredits>0]
    <tr>
