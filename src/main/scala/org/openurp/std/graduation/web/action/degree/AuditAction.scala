@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openurp.std.graduation.web.action.graduate
+package org.openurp.std.graduation.web.action.degree
 
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
@@ -26,13 +26,13 @@ import org.openurp.base.model.{Campus, Project}
 import org.openurp.code.edu.model.{EducationLevel, EducationResult}
 import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
-import org.openurp.std.graduation.service.{GraduateAuditService, GraduateService}
+import org.openurp.std.graduation.model.{DegreeResult, GraduateBatch}
+import org.openurp.std.graduation.service.{DegreeAuditService, GraduateService}
 
 /** 管理部门毕业审核
  */
-class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportSupport[GraduateResult] {
-  var graduateAuditService: GraduateAuditService = _
+class AuditAction extends RestfulAction[DegreeResult], ProjectSupport, ExportSupport[DegreeResult] {
+  var degreeAuditService: DegreeAuditService = _
   var graduateService: GraduateService = _
 
   override protected def simpleEntityName: String = "result"
@@ -62,9 +62,9 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
   }
 
   def audit(): View = {
-    val results = entityDao.find(classOf[GraduateResult], getLongIds("result"))
+    val results = entityDao.find(classOf[DegreeResult], getLongIds("result"))
     results foreach { result =>
-      graduateAuditService.audit(result)
+      degreeAuditService.audit(result)
     }
     redirect("search", "审核成功")
   }
@@ -76,7 +76,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
   def add(): View = {
     val batch = entityDao.get(classOf[GraduateBatch], getLongId("result.batch"))
     val stdCodes = get("codes", "")
-    val cnt = graduateAuditService.initResults(Strings.split(stdCodes).toList, batch)
+    val cnt = degreeAuditService.initResults(Strings.split(stdCodes).toList, batch)
     redirect("search", "&result.batch.id=" + batch.id, s"添加了${cnt}个学生")
   }
 
@@ -84,7 +84,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
    */
   @mapping(method = "delete")
   override def remove(): View = {
-    val query = OqlBuilder.from(classOf[GraduateResult], "result")
+    val query = OqlBuilder.from(classOf[DegreeResult], "result")
     val resultIds = getLongIds("result")
     query.where("result.id in (:ids) and result.published = false", resultIds)
     val results = entityDao.search(query)
@@ -96,7 +96,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
    */
   def init(): View = {
     val batch = entityDao.get(classOf[GraduateBatch], getLongId("result.batch"))
-    val cnt = graduateAuditService.initResults(batch)
+    val cnt = degreeAuditService.initResults(batch)
     redirect("search", s"添加了${cnt}个学生")
   }
 

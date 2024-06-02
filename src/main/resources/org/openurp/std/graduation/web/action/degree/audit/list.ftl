@@ -18,37 +18,20 @@
         menu4.addItem("添加学生(按学号)", "addStudents()");
         menu4.addItem("移除学生", action.multi("remove","确定删除选中学生的审核结果?"));
 
-        var menu3 = bar.addMenu("自动审核", action.multi('audit'));
-        menu3.addItem("手动审核", "manualAuditPrompt()");
+        bar.addItem("自动审核", action.multi('audit'));
 
-        /*var menu1 = bar.addMenu("设置结论", null);
-        var stateMap = {};
-        [#list graduateStates! as state]
-        stateMap["${state.id}"] = "${state.name}";
-        menu1.addItem("${state.name}", "setConclusion('${state.id}')");
-        [/#list]
-        menu1.addItem("取消结论", "setConclusion()", "edit-delete.png");
-        */
+        var menu2=bar.addMenu("设置发布", null);
+        menu2.addItem("发布","publish(1)");
+        menu2.addItem("取消发布","publish(0)");
 
-        //var menu2=bar.addMenu("设置发布", null);
-        //menu2.addItem("发布","publish(1)");
-        //menu2.addItem("取消发布","publish(0)");
+        bar.addItem("清空结果", "clearResult()", "edit-delete.png");
 
-        //bar.addItem("清空结果", "clearResult()", "edit-delete.png");
-
-        var exportMenu = bar.addMenu("导出",action.exportData("std.code:学号,std.name:姓名,std.gender.name:性别,std.person.code:身份证号,"+
+        bar.addItem("导出",action.exportData("std.code:学号,std.name:姓名,std.gender.name:性别,std.person.code:身份证号,"+
                "std.state.grade.code:年级,std.state.campus.name:校区,std.level.name:培养层次,std.state.department.name:院系," +
                "std.state.major.name:专业,std.state.direction.name:方向,std.state.squad.name:班级,std.studyType.name:学习形式,"+
-               "std.studyOn:入学日期,std.graduateOn:预计毕业日期,std.state.status.name:学籍状态,passed:是否通过," +
+               "std.studyOn:入学日期,std.graduateOn:预计毕业日期,std.state.status.name:学籍状态,passed:是否通过,degree.name:学位," +
                "passedItems:通过明细,failedItems:不通过明细",
-                null,'fileName=毕业审核结果'));
-        //exportMenu.addItem("导出教委格式", "exportKSYFormat()");
-
-      function exportKSYFormat(){
-        var form = document.searchForm;
-        bg.form.addInput(form, "fileName", "${batch.name}毕业审核名单(考试院)");
-        bg.form.submit(form, "${b.url('!index')}","_self");
-      }
+                null,'fileName=学位审核结果'));
       [/@]
     [@b.row]
       [@b.boxcol/]
@@ -62,9 +45,9 @@
         [@b.col title="专业/方向" property="std.state.major.name" width="19%"]
           <div class="text-ellipsis">${(result.std.state.major.name)!} ${(result.std.state.direction.name)!}</div>
         [/@]
-        [@b.col title="是否通过" width="7%" property="passed"]
+        [@b.col title="是否通过" width="10%" property="passed"]
           [#if (result.passed)??]
-            ${result.passed?string("通过", "<span style='color:red'>未通过</span>")}
+            [#if result.passed]通过 <span class="text-muted" style="font-size:0.8em">${(result.degree.name)!}</span>[#else]<span style='color:red'>未通过</span>[/#if]
           [#else]
             未审核
           [/#if]
@@ -83,8 +66,6 @@
   [/@]
   [@b.form name="auditResultListForm" method="post" action="!index"][/@]
 
-[#include "manualAuditForm.ftl"/]
-[#include "graduateStateTable.ftl"/]
 
 [#-- 根据学号添加学生的colorbox --]
 <div style="display:none;">

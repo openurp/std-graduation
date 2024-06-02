@@ -85,7 +85,7 @@ class StdApplyAction extends ActionSupport, EntityAction[DegreeApply], ProjectSu
         da
     }
     getDegreeResult(student, Some(batch)) foreach { dr =>
-      da.gpa = dr.gpa
+      da.gpa = dr.gpa.getOrElse(0)
     }
     da.updatedAt = Instant.now
     entityDao.saveOrUpdate(da)

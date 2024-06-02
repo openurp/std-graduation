@@ -22,6 +22,7 @@ import org.beangle.cdi.bind.BindModule
 class DefaultModule extends BindModule {
 
   override protected def binding(): Unit = {
+    bind(classOf[degree.AuditAction])
     bind(classOf[degree.StdApplyAction])
     bind(classOf[degree.ApplyAuditAction])
     bind(classOf[degree.Bachelor2ndApplyAction])
