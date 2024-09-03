@@ -15,7 +15,7 @@
     bar.addItem('审核', action.multi("audit"));
     bar.addItem('未过课程', action.multi("failCourses"));
     bar.addItem("${b.text("action.export")}",action.exportData("std.code:学号,std.name:姓名,std.gender.name:性别,std.level.name:培养层次,"+
-                "std.stdType.name:学生类别,std.state.department.name:院系,std.state.major.name:专业,std.state.direction.name:方向,"+
+                "std.stdType.name:学生类别,std.state.department.name:院系,std.state.major.name:专业,std.state.direction.name:方向,std.state.status.name:学籍状态,"+
                 "passed:是否通过,predicted:预审是否通过,requiredCredits:要求学分,passedCredits:完成学分,owedCredits:未完成学分," +
                 "owedCredits2:预审未完成学分,owedCredits3:在读课程通过后，还需学分,result:未完成明细,result3:在读课程通过后预计未完成明细",
                 null,'fileName=计划完成审核结果'));

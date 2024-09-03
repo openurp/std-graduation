@@ -10,6 +10,7 @@
   [@b.select name="result.std.stdType.id" items=stdTypes label="学生类别" empty="..."/]
   [@b.textfield name="result.std.state.major.name" label="专业名称"/]
   [@b.textfield name="result.std.state.squad.name" label="班级名称" /]
+  [@b.select name="result.std.state.status.id" items=statuses label="学籍状态" empty="..."/]
   [@b.select name="result.passed" label="是否通过"]
     <option value="">...</option>
     <option value="1">是</option>

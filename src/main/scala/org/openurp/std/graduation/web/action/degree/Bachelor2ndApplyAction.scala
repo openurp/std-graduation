@@ -21,7 +21,7 @@ import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.Project
-import org.openurp.edu.grade.service.impl.BestGradeFilter
+import org.openurp.edu.grade.service.filters.BestGradeFilter
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{Bachelor2ndApply, GraduateBatch}
 import org.openurp.std.graduation.web.helper.CommonGradeHelper

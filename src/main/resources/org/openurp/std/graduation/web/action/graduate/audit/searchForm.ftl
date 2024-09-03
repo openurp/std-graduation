@@ -1,7 +1,7 @@
 [#ftl/]
 <tbody>
   <input type="hidden" name="audited" value="1" />
-  [@b.select label="批次" name="result.batch.id" items=batches value=batches?first/]
+  [@b.select label="批次" name="result.batch.id" items=batches value=batches?first required="true"/]
   [@b.textfield name="result.std.code" label="学号" maxlength="50000"/]
   [@b.textfield name="result.std.name" label="姓名" /]
   [@b.textfield name="result.std.state.grade.code" label="年级" /]

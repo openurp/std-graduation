@@ -24,7 +24,7 @@ import org.beangle.web.action.support.ActionSupport
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
-import org.openurp.edu.grade.service.impl.BestGradeFilter
+import org.openurp.edu.grade.service.filters.BestGradeFilter
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.Bachelor2ndApply
 import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}

@@ -100,4 +100,16 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     redirect("search", s"添加了${cnt}个学生")
   }
 
+  /** 删除延期学生
+   *
+   * @return
+   */
+  def removeDeferred(): View = {
+    val query = OqlBuilder.from(classOf[GraduateResult], "result")
+    query.where("result.batch.id=:batchId", getLongId("result.batch"))
+    query.where("result.published = false")
+    val results = entityDao.search(query).filter(x => x.std.graduateOn.isAfter(x.batch.graduateOn.plusDays(30)))
+    entityDao.remove(results)
+    redirect("search", s"删除了${results.size}个学生的审核结果")
+  }
 }

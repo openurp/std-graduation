@@ -26,7 +26,7 @@ import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.EducationLevel
-import org.openurp.code.std.model.StdType
+import org.openurp.code.std.model.{StdType, StudentStatus}
 import org.openurp.edu.grade.model.{AuditCourseLevel, AuditCourseResult, AuditGroupResult, AuditPlanResult}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.GraduateResult
@@ -51,6 +51,7 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
     put("departs", getDeparts)
     put("stdTypes", getCodes(classOf[StdType]))
     put("levels", getCodes(classOf[EducationLevel]))
+    put("statuses", getCodes(classOf[StudentStatus]))
     put("batches", batches)
     forward()
   }
@@ -71,10 +72,10 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
       case _ =>
     }
     getFloat("requiredCredits.from") foreach { f => builder.where("result.requiredCredits >= :cr1", f) }
-    getFloat("requiredCredits.to") foreach { f => builder.where("result.requiredCredits <= :cr1", f) }
+    getFloat("requiredCredits.to") foreach { f => builder.where("result.requiredCredits <= :cr2", f) }
 
-    getFloat("passedCredits.from") foreach { f => builder.where("result.passedCredits >= :cr1", f) }
-    getFloat("passedCredits.to") foreach { f => builder.where("result.passedCredits <= :cr1", f) }
+    getFloat("passedCredits.from") foreach { f => builder.where("result.passedCredits >= :cr3", f) }
+    getFloat("passedCredits.to") foreach { f => builder.where("result.passedCredits <= :cr4", f) }
 
     getLong("batch.id") foreach { batchId =>
       builder.where(s"exists(from ${classOf[GraduateResult].getName} gr where gr.std=result.std and gr.batch.id=:batchId)", batchId)

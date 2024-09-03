@@ -22,7 +22,7 @@ import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.openurp.base.std.model.Student
 import org.openurp.edu.grade.model.{CourseGrade, Grade}
-import org.openurp.edu.grade.service.impl.BestGradeFilter
+import org.openurp.edu.grade.service.filters.BestGradeFilter
 
 class CommonGradeHelper(entityDao: EntityDao, filter: BestGradeFilter) {
 
