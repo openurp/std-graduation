@@ -1,0 +1,16 @@
+[#ftl]
+[@b.head/]
+[@b.toolbar title="添加/更新毕业批次"]
+  bar.addBack();
+[/@]
+[@b.form name="batchForm" action=b.rest.save(batch)  theme="list"]
+  [@b.textfield label="common.name" name="batch.name" value=batch.name! required="true" maxlength="50" style="width:200px;"/]
+  [@b.select name="batch.season.id" items=seasons label="界别" empty="..." required="true" value=(batch.season)!/]
+  [@b.date label="预毕业日期" name="batch.graduateOn" required="true" format="yyyy-MM-dd"  value=batch.graduateOn!/]
+  [@b.radios label="是否授予学位" name="batch.degreeOffered" value=batch.degreeOffered!/]
+  [@b.formfoot]
+    [@b.submit/]
+    [@b.reset/]
+    <input type="hidden" name="batch.project.id" value="${project.id}"/>
+  [/@]
+[/@]

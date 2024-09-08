@@ -38,6 +38,7 @@ class DefaultModule extends BindModule {
     bind(classOf[plan.DepartAction])
 
     bind(classOf[graduate.AuditAction])
+    bind(classOf[BatchAction])
   }
 
 }

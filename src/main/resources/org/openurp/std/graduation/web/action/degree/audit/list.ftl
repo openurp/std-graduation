@@ -66,7 +66,6 @@
   [/@]
   [@b.form name="auditResultListForm" method="post" action="!index"][/@]
 
-
 [#-- 根据学号添加学生的colorbox --]
 <div style="display:none;">
   <div id='addStudentsDiv'>
