@@ -17,7 +17,7 @@
 
 package org.openurp.std.graduation.web.action.archive
 
-import org.beangle.web.action.support.ActionSupport
+import org.beangle.webmvc.support.ActionSupport
 
 class FileAction extends ActionSupport {
 

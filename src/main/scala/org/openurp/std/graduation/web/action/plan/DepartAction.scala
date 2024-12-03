@@ -17,7 +17,7 @@
 
 package org.openurp.std.graduation.web.action.plan
 
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.view.View
 import org.openurp.base.std.model.Student
 import org.openurp.edu.grade.model.{AuditCourseLevel, AuditPlanResult}
 import org.openurp.edu.grade.service.AuditPlanService

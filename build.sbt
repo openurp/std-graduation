@@ -3,7 +3,7 @@ import org.openurp.parent.Settings.*
 import sbt.Keys.libraryDependencies
 
 ThisBuild / organization := "org.openurp.std.graduation"
-ThisBuild / version := "0.0.6-SNAPSHOT"
+ThisBuild / version := "0.0.6"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -24,11 +24,12 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std graduation"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-graduation/index.html"))
 
-val apiVer = "0.41.6"
-val starterVer = "0.3.40"
-val baseVer = "0.4.38"
-val eduCoreVer = "0.3.0"
-val stdCoreVer = "0.0.9"
+val apiVer = "0.41.13"
+val starterVer = "0.3.47"
+val baseVer = "0.4.45"
+val eduCoreVer = "0.3.6"
+val stdCoreVer = "0.0.14"
+
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer

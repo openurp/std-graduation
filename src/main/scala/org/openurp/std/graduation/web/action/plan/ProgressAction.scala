@@ -20,9 +20,9 @@ package org.openurp.std.graduation.web.action.plan
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.doc.transfer.exporter.ExportContext
-import org.beangle.web.action.annotation.{mapping, param}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.{mapping, param}
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.EducationLevel
@@ -58,6 +58,7 @@ class ProgressAction extends ActionSupport, EntityAction[AuditPlanResult], Proje
 
   protected override def getQueryBuilder: OqlBuilder[AuditPlanResult] = {
     val builder = super.getQueryBuilder
+    builder.where("result.std.project=:project", getProject)
     queryByDepart(builder, "result.std.state.department")
     getBoolean("stdActive") foreach { active =>
       val nowAt = LocalDate.now

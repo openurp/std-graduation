@@ -20,8 +20,8 @@ package org.openurp.std.graduation.web.action.degree
 import org.beangle.commons.bean.orderings.PropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.{Graduate, Squad, Student}
 import org.openurp.starter.web.support.ProjectSupport
@@ -50,6 +50,7 @@ class GraduatedSquadAction extends ActionSupport, EntityAction[GraduateResult], 
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val query = OqlBuilder.from[Array[Any]](classOf[GraduateResult].getName, "ar")
       .where("ar.batch=:batch", batch)
+    query.where("ar.std.project=:project", getProject)
     query.join("ar.std.state.squad", "adc")
     query.groupBy("adc.id")
     query.select("adc.id,count(*)")

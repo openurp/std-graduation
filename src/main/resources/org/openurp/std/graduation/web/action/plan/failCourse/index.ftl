@@ -16,6 +16,7 @@
           [@b.select label="修读情况" name="result.hasGrade" items={'1':'修读过','0':'未修读过'} empty="..."/]
           [@b.select label="预计通过" name="result.predicted" items={'1':'是','0':'否'} empty="..."/]
           [@b.select label="是否在读" name="result.taking" items={'1':'是','0':'否'} empty="..."/]
+          [@b.select label="学籍有效" name="stdActive" items={'1':'有效','0':'无效'} value="1"/]
         [/@]
   </div>
   <div class="search-list">

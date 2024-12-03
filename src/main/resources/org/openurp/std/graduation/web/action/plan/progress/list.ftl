@@ -3,6 +3,10 @@
 [@b.grid items=results! var="result" id="result_list_table"]
   [@b.gridbar]
     bar.addItem('未过课程', action.multi("failCourses"));
+    bar.addItem("${b.text("action.export")}",
+        action.exportData("std.code:学号,std.name:姓名,std.state.grade:年级,"+
+        "std.state.department.name:院系,std.state.major.name:专业,requiredCredits:应修,owedCredits:缺分,passed:是否完成,"+
+        "result:缺分明细,result3:预计缺分明细",null,'fileName=计划完成情况'));
   [/@]
   [@b.row]
   [@b.boxcol/]

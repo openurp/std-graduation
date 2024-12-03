@@ -17,29 +17,36 @@
 
 package org.openurp.std.graduation.web.action
 
+import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.base.std.model.GraduateSeason
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.GraduateBatch
 
-class BatchAction extends RestfulAction[GraduateBatch],ProjectSupport{
+class BatchAction extends RestfulAction[GraduateBatch], ProjectSupport {
 
   override protected def simpleEntityName: String = "batch"
 
   override def indexSetting(): Unit = {
-    put("seasons",getSeasons(getProject))
+    put("seasons", getSeasons(getProject))
   }
 
   override protected def editSetting(entity: GraduateBatch): Unit = {
     val project = getProject
     put("seasons", getSeasons(project))
-    put("project",project)
+    put("project", project)
     super.editSetting(entity)
   }
 
-  private def getSeasons(project:Project):Seq[GraduateSeason]={
-    entityDao.findBy(classOf[GraduateSeason],"project",project)
+  override protected def getQueryBuilder: OqlBuilder[GraduateBatch] = {
+    val query = super.getQueryBuilder
+    query.where("batch.project=:project", getProject)
+    query
+  }
+
+  private def getSeasons(project: Project): Seq[GraduateSeason] = {
+    entityDao.findBy(classOf[GraduateSeason], "project", project)
   }
 
 }

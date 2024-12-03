@@ -19,9 +19,10 @@ package org.openurp.std.graduation.web.action.degree
 
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.ems.app.rule.RuleEngine
+import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.code.edu.model.{EducationLevel, EducationResult}
 import org.openurp.code.std.model.StdType
@@ -56,12 +57,17 @@ class AuditAction extends RestfulAction[DegreeResult], ProjectSupport, ExportSup
     forward()
   }
 
-  override def search(): View = {
-    put("batch", entityDao.get(classOf[GraduateBatch], getLongId("result.batch")))
-    super.search()
+  override protected def getQueryBuilder: OqlBuilder[DegreeResult] = {
+    getLong("result.batch.id") foreach { batchId =>
+      put("batch", entityDao.get(classOf[GraduateBatch], batchId))
+    }
+    val query = super.getQueryBuilder
+    query.where("result.std.project=:project", getProject)
+    query
   }
 
   def audit(): View = {
+    RuleEngine.clearLocalCache()
     val results = entityDao.find(classOf[DegreeResult], getLongIds("result"))
     results foreach { result =>
       degreeAuditService.audit(result)

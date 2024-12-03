@@ -20,9 +20,9 @@ package org.openurp.std.graduation.web.action.degree
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.ems.app.web.WebBusinessLogger
 import org.beangle.security.Securities
-import org.beangle.web.action.annotation.{mapping, param}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.{Status, View}
+import org.beangle.webmvc.annotation.{mapping, param}
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.{Status, View}
 import org.beangle.webmvc.support.action.EntityAction
 import org.openurp.base.std.model.Student
 import org.openurp.edu.program.domain.ProgramProvider

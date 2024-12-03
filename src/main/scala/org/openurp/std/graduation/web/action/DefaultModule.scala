@@ -17,11 +17,12 @@
 
 package org.openurp.std.graduation.web.action
 
-import org.beangle.cdi.bind.BindModule
+import org.beangle.commons.cdi.BindModule
 
 class DefaultModule extends BindModule {
 
   override protected def binding(): Unit = {
+    System.setProperty("org.jboss.logging.provider", "slf4j")
     bind(classOf[degree.AuditAction])
     bind(classOf[degree.StdApplyAction])
     bind(classOf[degree.ApplyAuditAction])
@@ -39,6 +40,7 @@ class DefaultModule extends BindModule {
 
     bind(classOf[graduate.AuditAction])
     bind(classOf[BatchAction])
+    bind(classOf[SettingAction])
   }
 
 }

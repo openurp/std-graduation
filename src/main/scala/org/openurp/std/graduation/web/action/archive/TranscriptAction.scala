@@ -20,15 +20,15 @@ package org.openurp.std.graduation.web.action.archive
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
 import org.beangle.security.Securities
-import org.beangle.web.action.context.Params
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.context.Params
+import org.beangle.webmvc.support.ActionSupport
 import org.beangle.webmvc.support.action.EntityAction
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.User
 import org.openurp.base.std.model.Graduate
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
+import org.openurp.std.graduation.web.helper.SquadStatHelper
 
 class TranscriptAction extends ActionSupport, EntityAction[GraduateResult], ProjectSupport {
 

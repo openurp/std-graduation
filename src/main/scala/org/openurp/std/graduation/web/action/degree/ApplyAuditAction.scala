@@ -19,8 +19,8 @@ package org.openurp.std.graduation.web.action.degree
 
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
-import org.beangle.web.action.annotation.ignore
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.annotation.ignore
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.QueryHelper
 import org.openurp.base.model.Project
@@ -45,6 +45,7 @@ class ApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[DegreeA
 
   override def getQueryBuilder: OqlBuilder[DegreeApply] = {
     val query = super.getQueryBuilder
+    query.where("apply.std.project=:project", getProject)
     QueryHelper.dateBetween(query, null, "updatedAt", "applyOn", "applyOn")
     query
   }

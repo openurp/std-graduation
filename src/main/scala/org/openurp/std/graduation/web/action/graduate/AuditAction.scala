@@ -17,10 +17,15 @@
 
 package org.openurp.std.graduation.web.action.graduate
 
-import org.beangle.commons.lang.Strings
+import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.{ClassLoaders, Strings}
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.web.action.annotation.mapping
-import org.beangle.web.action.view.View
+import org.beangle.doc.transfer.exporter.ExportContext
+import org.beangle.ems.app.rule.RuleEngine
+import org.beangle.webmvc.annotation.mapping
+import org.beangle.webmvc.context.ActionContext
+import org.beangle.webmvc.view.View
+import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.code.edu.model.{EducationLevel, EducationResult}
@@ -28,6 +33,7 @@ import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 import org.openurp.std.graduation.service.{GraduateAuditService, GraduateService}
+import org.openurp.std.info.model.Examinee
 
 /** 管理部门毕业审核
  */
@@ -56,13 +62,18 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     forward()
   }
 
-  override def search(): View = {
-    put("batch", entityDao.get(classOf[GraduateBatch], getLongId("result.batch")))
-    super.search()
+  override protected def getQueryBuilder: OqlBuilder[GraduateResult] = {
+    getLong("result.batch.id") foreach { batchId =>
+      put("batch", entityDao.get(classOf[GraduateBatch], batchId))
+    }
+    val query = super.getQueryBuilder
+    query.where("result.std.project=:project", getProject)
+    query
   }
 
   def audit(): View = {
     val results = entityDao.find(classOf[GraduateResult], getLongIds("result"))
+    RuleEngine.clearLocalCache()
     results foreach { result =>
       graduateAuditService.audit(result)
     }
@@ -112,4 +123,33 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     entityDao.remove(results)
     redirect("search", s"删除了${results.size}个学生的审核结果")
   }
+
+  /**
+   * 考试院报表
+   *
+   * @return
+   */
+  def ksyData(): View = {
+    val builder = OqlBuilder.from(classOf[GraduateResult], "result")
+    this.populateConditions(builder)
+    val results = entityDao.search(builder)
+    val items = Collections.newBuffer[collection.Map[String, Object]]
+    for (result <- results) {
+      val data = Collections.newMap[String, Object]
+      data.put("result", result.educationResult)
+      data.put("std", result.std)
+      val ebuilder = OqlBuilder.from(classOf[Examinee], "e").where("e.std=:std", result.std)
+      val examinees = entityDao.search(ebuilder)
+      if (examinees.nonEmpty) data.put("examinee", examinees.head)
+      items.addOne(data)
+    }
+    val ctx = ExportContext.template(ClassLoaders.getResource("org/openurp/std/graduation/graduate/ksy_format.xlsx").get)
+    ctx.put("items", items)
+
+    val response = ActionContext.current.response
+    RequestUtils.setContentDisposition(response, ctx.buildFileName(get("fileName")))
+    ctx.writeTo(response.getOutputStream)
+    null
+  }
+
 }

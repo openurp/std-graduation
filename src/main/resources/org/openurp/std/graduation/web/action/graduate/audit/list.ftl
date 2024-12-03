@@ -40,15 +40,16 @@
         var exportMenu = bar.addMenu("导出",action.exportData("std.code:学号,std.name:姓名,std.gender.name:性别,std.person.code:身份证号,"+
                "std.state.grade.code:年级,std.state.campus.name:校区,std.level.name:培养层次,std.state.department.name:院系," +
                "std.state.major.name:专业,std.state.direction.name:方向,std.state.squad.name:班级,std.studyType.name:学习形式,"+
-               "std.studyOn:入学日期,std.graduateOn:预计毕业日期,std.state.status.name:学籍状态,passed:是否通过," +
+               "std.studyOn:入学日期,std.graduateOn:预计毕业日期,std.state.status.name:学籍状态,"+
+               "std.state.squad.mentor.name:辅导员,std.state.squad.master.name:班主任,passed:是否通过," +
                "passedItems:通过明细,failedItems:不通过明细",
                 null,'fileName=毕业审核结果'));
-        //exportMenu.addItem("导出教委格式", "exportKSYFormat()");
+        exportMenu.addItem("导出教委格式", "exportKSYFormat()");
 
       function exportKSYFormat(){
         var form = document.searchForm;
-        bg.form.addInput(form, "fileName", "${batch.name}毕业审核名单(考试院)");
-        bg.form.submit(form, "${b.url('!index')}","_self");
+        bg.form.addInput(form, "fileName", "${(batch.name)!}毕业审核名单(考试院)");
+        bg.form.submit(form, "${b.url('!ksyData')}","_blank");
       }
       [/@]
     [@b.row]

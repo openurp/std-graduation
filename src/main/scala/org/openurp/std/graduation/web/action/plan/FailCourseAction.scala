@@ -18,8 +18,8 @@
 package org.openurp.std.graduation.web.action.plan
 
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
-import org.beangle.web.action.support.ActionSupport
-import org.beangle.web.action.view.View
+import org.beangle.webmvc.support.ActionSupport
+import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{EntityAction, ExportSupport}
 import org.openurp.base.model.Project
 import org.openurp.edu.grade.model.AuditCourseResult
@@ -53,6 +53,7 @@ class FailCourseAction extends ActionSupport, EntityAction[AuditCourseResult], P
 
   protected override def getQueryBuilder: OqlBuilder[AuditCourseResult] = {
     val builder = super.getQueryBuilder
+    builder.where("result.groupResult.planResult.std.project=:project", getProject)
     builder.where("result.passed = false")
     builder.where("result.groupResult.passed = false")
     queryByDepart(builder, "result.groupResult.planResult.std.state.department")
