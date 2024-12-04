@@ -19,6 +19,7 @@ package org.openurp.std.graduation.web.action.degree
 
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.rule.RuleEngine
 import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
@@ -29,6 +30,7 @@ import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{DegreeResult, GraduateBatch}
 import org.openurp.std.graduation.service.{DegreeAuditService, GraduateService}
+import org.openurp.std.graduation.web.helper.DegreeResultExtractor
 
 /** 管理部门毕业审核
  */
@@ -106,4 +108,8 @@ class AuditAction extends RestfulAction[DegreeResult], ProjectSupport, ExportSup
     redirect("search", s"添加了${cnt}个学生")
   }
 
+  override protected def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new DegreeResultExtractor(entityDao)
+  }
 }

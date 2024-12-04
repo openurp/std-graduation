@@ -22,17 +22,18 @@ import org.beangle.commons.lang.{ClassLoaders, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.ems.app.rule.RuleEngine
+import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.context.ActionContext
-import org.beangle.webmvc.view.View
-import org.beangle.web.servlet.util.RequestUtils
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.code.edu.model.{EducationLevel, EducationResult}
 import org.openurp.code.std.model.StdType
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 import org.openurp.std.graduation.service.{GraduateAuditService, GraduateService}
+import org.openurp.std.graduation.web.helper.GraduateResultExtractor
 import org.openurp.std.info.model.Examinee
 
 /** 管理部门毕业审核
@@ -150,6 +151,11 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     RequestUtils.setContentDisposition(response, ctx.buildFileName(get("fileName")))
     ctx.writeTo(response.getOutputStream)
     null
+  }
+
+  override protected def configExport(context: ExportContext): Unit = {
+    super.configExport(context)
+    context.extractor = new GraduateResultExtractor(entityDao)
   }
 
 }
