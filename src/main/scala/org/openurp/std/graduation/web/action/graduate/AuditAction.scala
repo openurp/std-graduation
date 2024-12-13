@@ -27,6 +27,7 @@ import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.context.ActionContext
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.view.View
+import org.openurp.base.hr.model.President
 import org.openurp.base.model.{Campus, Project}
 import org.openurp.code.edu.model.{EducationLevel, EducationResult}
 import org.openurp.code.std.model.StdType
@@ -35,6 +36,8 @@ import org.openurp.std.graduation.model.{GraduateBatch, GraduateResult}
 import org.openurp.std.graduation.service.{GraduateAuditService, GraduateService}
 import org.openurp.std.graduation.web.helper.GraduateResultExtractor
 import org.openurp.std.info.model.Examinee
+
+import java.time.format.DateTimeFormatter
 
 /** 管理部门毕业审核
  */
@@ -131,14 +134,25 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
    * @return
    */
   def ksyData(): View = {
+    val project = getProject
     val builder = OqlBuilder.from(classOf[GraduateResult], "result")
     this.populateConditions(builder)
     val results = entityDao.search(builder)
+    var batch = results.head.batch
     val items = Collections.newBuffer[collection.Map[String, Object]]
+    val dateFormater = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val president = entityDao.findBy(classOf[President], "school", project.school).filter(x => x.within(batch.graduateOn))
+    val presidentName = if president.nonEmpty then president.head.name else "校长"
     for (result <- results) {
       val data = Collections.newMap[String, Object]
       data.put("result", result.educationResult)
       data.put("std", result.std)
+      data.put("studyOn", dateFormater.format(result.std.studyOn))
+      data.put("graduateOn", dateFormater.format(result.std.graduateOn))
+      result.std.person.birthday foreach { b =>
+        data.put("birthday", dateFormater.format(b))
+      }
+      data.put("president", presidentName)
       val ebuilder = OqlBuilder.from(classOf[Examinee], "e").where("e.std=:std", result.std)
       val examinees = entityDao.search(ebuilder)
       if (examinees.nonEmpty) data.put("examinee", examinees.head)

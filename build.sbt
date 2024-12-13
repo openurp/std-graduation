@@ -3,7 +3,7 @@ import org.openurp.parent.Settings.*
 import sbt.Keys.libraryDependencies
 
 ThisBuild / organization := "org.openurp.std.graduation"
-ThisBuild / version := "0.0.7-SNAPSHOT"
+ThisBuild / version := "0.0.7"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -24,11 +24,11 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std graduation"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-graduation/index.html"))
 
-val apiVer = "0.41.13"
-val starterVer = "0.3.47"
-val baseVer = "0.4.45"
-val eduCoreVer = "0.3.6"
-val stdCoreVer = "0.0.14"
+val apiVer = "0.41.14"
+val starterVer = "0.3.48"
+val baseVer = "0.4.46"
+val eduCoreVer = "0.3.7"
+val stdCoreVer = "0.0.15"
 
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
@@ -44,7 +44,7 @@ lazy val root = (project in file("."))
     common,
     libraryDependencies ++= Seq(openurp_edu_api, openurp_std_api, beangle_ems_app),
     libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag),
-    libraryDependencies ++= Seq(openurp_edu_core,openurp_std_core),
+    libraryDependencies ++= Seq(openurp_edu_core, openurp_std_core),
     libraryDependencies ++= Seq(beangle_doc_docx)
   )
 
