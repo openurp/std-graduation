@@ -8,7 +8,7 @@
   [@b.startend label="有效期" name="setting.beginOn,setting.endOn" start=(setting.beginOn)! end=(setting.endOn)! required="true,false" style="width:100px;"/]
   [@b.select label="培养层次" name="setting.levels.id" multiple="true" items=levels values=setting.levels style="width:400px" required="true"/]
   [@b.select label="毕业审核项目" name="setting.grules.id" multiple="true" style="width:400px;" values=gruleIds items=graduateRules required="true" option="id,title"/]
-  [@b.select label="学位审核项目" name="setting.drules.id" multiple="true" style="width:400px;" values=druleIds items=degreeRules required="true" option="id,title"/]
+  [@b.select label="学位审核项目" name="setting.drules.id" multiple="false" style="width:400px;" values=druleIds items=degreeRules required="true" option="id,title"/]
   [@b.textarea label="备注" name="setting.remark" value=setting.remark! maxlength="200"/]
   [@b.formfoot]
       [@b.reset/]  [@b.submit/]
