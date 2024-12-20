@@ -3,7 +3,7 @@ import org.openurp.parent.Settings.*
 import sbt.Keys.libraryDependencies
 
 ThisBuild / organization := "org.openurp.std.graduation"
-ThisBuild / version := "0.0.8-SNAPSHOT"
+ThisBuild / version := "0.0.8"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -28,7 +28,7 @@ val apiVer = "0.41.14"
 val starterVer = "0.3.48"
 val baseVer = "0.4.46"
 val eduCoreVer = "0.3.7"
-val stdCoreVer = "0.0.16-SNAPSHOT"
+val stdCoreVer = "0.0.16"
 
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
