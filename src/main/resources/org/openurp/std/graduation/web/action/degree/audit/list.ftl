@@ -21,8 +21,8 @@
         bar.addItem("自动审核", action.multi('audit'));
 
         var menu2=bar.addMenu("设置发布", null);
-        menu2.addItem("发布","publish(1)");
-        menu2.addItem("取消发布","publish(0)");
+        menu2.addItem("发布", action.multi("publish","确定发布?","publish=1"));
+        menu2.addItem("取消发布", action.multi("publish","确定取消发布?","publish=0"));
 
         bar.addItem("清空结果", "clearResult()", "edit-delete.png");
 
@@ -83,22 +83,6 @@
 </div>
 
 <script>
-  function publish(publish) {
-        var ids = bg.input.getCheckBoxValues("result.id");
-    if(ids==null||ids==""){
-      alert("请选择记录进行操作!");  return;
-    }
-    if(publish) {
-      if(isNotAudited(ids)) {
-        return;
-      }
-      if(isNotSetConclusion(ids)) {
-        return;
-      }
-    }
-    bg.form.submit(document.auditResultListForm, "${b.base}/audit/graduate!publish.action?publish=" + publish);
-  }
-
   function clearResult() {
         var ids = bg.input.getCheckBoxValues("result.id");
     if(ids==null||ids==""){
@@ -108,7 +92,7 @@
       return;
     }
     if(confirm("确定要清空审核结果吗？")) {
-      bg.form.submit(document.auditResultListForm, "${b.base}/audit/graduate!clearResult.action");
+      bg.form.submit(document.auditResultListForm, "${b.base}/degree/audit!clearResult.action");
     }
   }
 

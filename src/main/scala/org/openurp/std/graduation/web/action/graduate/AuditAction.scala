@@ -18,6 +18,7 @@
 package org.openurp.std.graduation.web.action.graduate
 
 import org.beangle.commons.collection.Collections
+import org.beangle.commons.lang.text.DateFormatter
 import org.beangle.commons.lang.{ClassLoaders, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
@@ -37,7 +38,10 @@ import org.openurp.std.graduation.service.{GraduateAuditService, GraduateService
 import org.openurp.std.graduation.web.helper.GraduateResultExtractor
 import org.openurp.std.info.model.Examinee
 
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util
+import java.util.List
 
 /** 管理部门毕业审核
  */
@@ -167,8 +171,23 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     null
   }
 
+  /**
+   * 设置发布状态
+   *
+   * @return
+   */
+  def publish(): View = {
+    val resultIds = getLongIds("result")
+    val published = getBoolean("publish", true)
+    val results = entityDao.find(classOf[GraduateResult], resultIds)
+    graduateAuditService.publish(results, published)
+    redirect("search", "info.action.success")
+  }
+
+
   override protected def configExport(context: ExportContext): Unit = {
     super.configExport(context)
+    context.registerFormatter(classOf[LocalDate], new DateFormatter("yyyyMMdd"))
     context.extractor = new GraduateResultExtractor(entityDao)
   }
 

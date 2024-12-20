@@ -31,11 +31,9 @@
         menu1.addItem("取消结论", "setConclusion()", "edit-delete.png");
         */
 
-        //var menu2=bar.addMenu("设置发布", null);
-        //menu2.addItem("发布","publish(1)");
-        //menu2.addItem("取消发布","publish(0)");
-
-        //bar.addItem("清空结果", "clearResult()", "edit-delete.png");
+        var menu2=bar.addMenu("设置发布", null);
+        menu2.addItem("发布", action.multi("publish","确定发布?","publish=1"));
+        menu2.addItem("取消发布", action.multi("publish","确定取消发布?","publish=0"));
 
         var exportMenu = bar.addMenu("导出",action.exportData("examinee.code:考生号,std.code:学号,std.name:姓名,"+
                "std.gender.name:性别,std.person.birthday:出生日期,std.person.code:身份证号,"+
