@@ -3,7 +3,7 @@ import org.openurp.parent.Settings.*
 import sbt.Keys.libraryDependencies
 
 ThisBuild / organization := "org.openurp.std.graduation"
-ThisBuild / version := "0.0.8"
+ThisBuild / version := "0.0.9-SNAPSHOT"
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
