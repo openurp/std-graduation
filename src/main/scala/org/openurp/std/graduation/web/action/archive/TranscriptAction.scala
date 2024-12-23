@@ -48,7 +48,7 @@ class TranscriptAction extends ActionSupport, EntityAction[GraduateResult], Proj
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(batch, batches, getBoolean("passed"), None)
+    val rs = helper.statCertificate(batch, batches, getBoolean("passed"), getBoolean("deferred"))
     val squads = get("squadName") match
       case None => rs._1
       case Some(name) => if (Strings.isNotBlank(name)) rs._1.filter(_.name.contains(name)) else rs._1
@@ -73,6 +73,10 @@ class TranscriptAction extends ActionSupport, EntityAction[GraduateResult], Proj
     getBoolean("passed") foreach { p =>
       if (p) query.where("g.certificateNo is not null")
       else query.where("g.certificateNo is null")
+    }
+    getBoolean("deferred") foreach { d =>
+      if (d) query.where("g.std.graduationDeferred=true")
+      else query.where("g.std.graduationDeferred=false")
     }
     val gs = entityDao.search(query)
     put("gs", gs)

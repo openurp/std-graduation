@@ -1,11 +1,10 @@
 [#ftl]
 [@b.head/]
-[#include "nav.ftl"/]
+[#include "../certificate/nav.ftl"/]
 <div class="search-container">
   <div class="search-panel">
       [@b.form name="searchForm" action="!search" title="ui.searchForm" target="listFrame" theme="search"]
       [@b.select name="batch.id" items=batches label="毕业年月" required="true"/]
-      [@b.textfield name="batchNo" label="批次" placeholder="1,2,3" /]
      [/@]
   </div>
   <div class="search-list">

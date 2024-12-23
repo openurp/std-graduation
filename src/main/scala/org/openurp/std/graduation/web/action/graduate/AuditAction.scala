@@ -184,7 +184,6 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
     redirect("search", "info.action.success")
   }
 
-
   override protected def configExport(context: ExportContext): Unit = {
     super.configExport(context)
     context.registerFormatter(classOf[LocalDate], new DateFormatter("yyyyMMdd"))

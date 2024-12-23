@@ -1,0 +1,5 @@
+[#ftl]
+  [@b.nav class="nav-tabs nav-tabs-compact"]
+    [@b.navitem href="certificate"]毕业证书[/@]
+    [@b.navitem href="diploma"]学位证书[/@]
+  [/@]

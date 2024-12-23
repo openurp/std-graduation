@@ -3,12 +3,8 @@
 [@b.grid items=squads var="squad"]
   [@b.gridbar]
     bar.addItem("学生签收表",action.multi('signature',null,null,"_blank"));
-    var m1 = bar.addMenu("班级签收表",action.method('stat',null,null,"_blank"));
-    m1.addItem("证书明细",action.multi('detail',null,null,"_blank"));
-    bar.addItem("延长生签收表",action.method('deferred',null,null,"_blank"));
-    var m = bar.addMenu("资料归档..")
-    m.addItem("班级资料归档明细",action.method('squadArchives',null,null,"_blank"));
-    m.addItem("学生资料归档明细",action.method('stdArchives',null,null,"_blank"));
+    bar.addItem("班级签收表",action.method('stat',null,null,"_blank"));
+    bar.addItem("签收表档案",action.method('squadArchives',null,null,"_blank"));
   [/@]
   [@b.row]
     [@b.boxcol/]

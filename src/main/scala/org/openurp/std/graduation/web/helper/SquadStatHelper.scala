@@ -32,8 +32,8 @@ class SquadStatHelper(entityDao: EntityDao) {
    * @param batches
    * @return
    */
-  def statCertificate(batch: GraduateBatch, batches: Iterable[Int], passed: Option[Boolean], deferred: Option[Boolean]):
-  (collection.Seq[Squad], collection.Map[Squad, Any]) = {
+  def statCertificate(batch: GraduateBatch, batches: Iterable[Int],
+                      passed: Option[Boolean], deferred: Option[Boolean]): (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
       .where("g.std.project=:project", batch.project)
       .where("g.graduateOn = :graduateOn", batch.graduateOn)
@@ -43,8 +43,8 @@ class SquadStatHelper(entityDao: EntityDao) {
       else query.where("g.certificateNo is null")
     }
     deferred foreach { d =>
-      if (d) query.where("g.std.state.grade != g.std.state.squad.grade")
-      else query.where("g.std.state.grade=g.std.state.squad.grade") //非延长学生
+      if (d) query.where("g.std.graduationDeferred=true")
+      else query.where("g.std.graduationDeferred=false") //非延长学生
     }
     if (batches.nonEmpty) {
       query.where("g.batchNo in(:batches)", batches)
@@ -69,7 +69,7 @@ class SquadStatHelper(entityDao: EntityDao) {
   def statDiploma(batch: GraduateBatch, batches: Iterable[Int], deferred: Option[Boolean]):
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
-      .where("g.project=:project", batch.project)
+      .where("g.std.project=:project", batch.project)
       .where("g.degreeAwardOn = :graduateOn", batch.graduateOn)
     query.where("g.diplomaNo is not null")
     if (batches.nonEmpty) {

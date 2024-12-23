@@ -12,8 +12,8 @@
     <h4 width="100%" align="center" style="margin-bottom:5px">${batch.project.school.name }学历、学位证书签收名册
        <br>延长生
     </h4>
-    <table class="gridtable" align="center" style="border:1px">
-     <thead class="gridhead">
+    <table class="grid-table" align="center" style="border:1px">
+     <thead class="grid-head">
        <tr align="center">
          <td width="4%">序号</td>
          <td width="10%">学号</td>

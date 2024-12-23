@@ -11,7 +11,7 @@
          <td width="6%">人数</td>
          <td width="10%">签收</td>
          <td width="15%">日期</td>
-         <td width="10%">辅导员</td>
+         <td width="10%">班主任</td>
          <td width="10%">备注</td>
        </tr>
      </thead>
@@ -34,10 +34,10 @@
          <td>${squad_index+1}</td>
          <td>${squad.department.name}</td>
          <td style="text-align:left;padding-left: 5px;">${squad.name}</td>
-         <td align="center">${squadMap.get(squad)} [#assign totalInDepart=totalInDepart+squadMap.get(squad)]</td>
+         <td>${squadMap.get(squad)} [#assign totalInDepart=totalInDepart+squadMap.get(squad)]</td>
          <td></td>
          <td></td>
-         <td>${(squad.mentor.name)!}</td>
+         <td>${(squad.master.name)!}</td>
          <td></td>
        </tr>
 

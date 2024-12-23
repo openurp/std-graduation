@@ -21,15 +21,17 @@ import org.beangle.commons.bean.orderings.PropertyOrdering
 import org.beangle.commons.collection.Collections
 import org.beangle.commons.lang.Strings
 import org.beangle.data.dao.{EntityDao, OqlBuilder}
+import org.beangle.security.Securities
 import org.beangle.webmvc.context.Params
 import org.beangle.webmvc.support.ActionSupport
-import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.EntityAction
-import org.openurp.base.std.model.{Graduate, Squad, Student}
+import org.beangle.webmvc.view.View
+import org.openurp.base.std.model.{Graduate, Squad}
 import org.openurp.starter.web.support.ProjectSupport
-import org.openurp.std.graduation.web.helper.SquadStatHelper
 import org.openurp.std.graduation.model.{DegreeResult, GraduateBatch}
+import org.openurp.std.graduation.web.helper.{MathHelper, SquadStatHelper}
 
+import java.time.LocalDate
 import scala.collection.mutable
 
 /** 学位证签收表
@@ -48,7 +50,7 @@ class DiplomaAction extends ActionSupport, EntityAction[DegreeResult], ProjectSu
     forward()
   }
 
-  def report(): View = {
+  def stat(): View = {
     val batchId = Params.getLong("batch.id").get
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
@@ -72,38 +74,65 @@ class DiplomaAction extends ActionSupport, EntityAction[DegreeResult], ProjectSu
     forward()
   }
 
-  def detail(): View = {
+  def signature(): View = {
     val batchId = getLongId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
+    put("batch", batch)
     val squadIds = getLongIds("squad")
-    val query: OqlBuilder[DegreeResult] = OqlBuilder.from(classOf[DegreeResult], "ar")
-      .where("ar.batch.id=:batchId", batchId)
-      .where("ar.passed=true")
-    query.join("ar.std.state.squad", "adc")
+
+    val query = OqlBuilder.from(classOf[Graduate], "g")
+      .where("g.graduateOn =:graduateOn", batch.graduateOn) //按照毕业日期进行查询，有可能学位授予日期会晚于这个日期
+    query.join("g.std.state.squad", "adc")
+    query.where("g.diplomaNo is not null")
     query.where("adc.id in(:classIds)", squadIds)
     val ars = entityDao.search(query)
-    val res = Collections.newMap[Squad, mutable.Buffer[DegreeResult]]
+
+    val res = Collections.newMap[Squad, mutable.Buffer[Graduate]]
     for (ar <- ars) {
-      val adc: Squad = ar.std.state.get.squad.get
-      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[DegreeResult])
+      val adc = ar.std.state.get.squad.get
+      val adArs = res.getOrElseUpdate(adc, Collections.newBuffer[Graduate])
       adArs += ar
     }
-    val nres = Collections.newMap[String, mutable.Buffer[DegreeResult]]
+    val nres = Collections.newMap[String, mutable.Buffer[Graduate]]
     res foreach { case (k, v) =>
       nres.put(k.id.toString, v)
     }
     val squads = res.keys.toBuffer.sorted(PropertyOrdering.by("department.code,code"))
-    val graduateMap = Collections.newMap[Student, Graduate]
-    for (gr <- ars) {
-      val gBuilder = OqlBuilder.from(classOf[Graduate], "graduate")
-      gBuilder.where("graduate.std=:std", gr.std)
-      val graduations = entityDao.search(gBuilder)
-      for (graduation <- graduations) {
-        graduateMap.put(gr.std, graduation)
-      }
-    }
-    put("graduationMap", graduateMap)
     put("squads", squads)
     put("res", nres)
+    forward()
+  }
+
+  /** 班级归档资料
+   *
+   * @return
+   */
+  def squadArchives(): View = {
+    val batchId = getLongId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
+
+    val query = OqlBuilder.from[Array[AnyRef]](classOf[Graduate].getName, "g")
+      .where("g.graduateOn =:graduateOn", batch.graduateOn) //按照毕业日期进行查询，有可能学位授予日期会晚于这个日期
+    query.where("g.diplomaNo is not null")
+    query.join("g.std.state.squad", "adc")
+    query.groupBy("adc.id")
+    query.select("adc.id,count(*)")
+    var datas = entityDao.search(query)
+    for (d <- datas) {
+      d(0) = entityDao.get(classOf[Squad], d(0).asInstanceOf[Long])
+    }
+    datas = datas.sorted(PropertyOrdering.by("[0].department.code,[0].code"))
+    put("datas", datas)
+    put("graduateBatch", batch)
+    val archiveCategory = get("archiveCategory", "学士学位文凭签收表")
+    val startArchiveNo = getInt("startArchiveNo", 1)
+    val archiver = get("archiver", Securities.user)
+    val archiveOn = getDate("archiveOn").getOrElse(LocalDate.parse((batch.graduateOn.getYear + 1).toString + "-06-30"))
+    put("archiveCategory", archiveCategory)
+    put("startArchiveNo", startArchiveNo)
+    put("archiver", archiver)
+    put("archiveOn", archiveOn)
+    put("math", MathHelper)
     forward()
   }
 
