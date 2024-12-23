@@ -71,6 +71,7 @@ class DiplomaAction extends ActionSupport, EntityAction[DegreeResult], ProjectSu
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateBatch", batch)
+    put("project", getProject)
     forward()
   }
 
@@ -133,6 +134,23 @@ class DiplomaAction extends ActionSupport, EntityAction[DegreeResult], ProjectSu
     put("archiver", archiver)
     put("archiveOn", archiveOn)
     put("math", MathHelper)
+    forward()
+  }
+
+  /** 按照班级打印学位授予书
+   *
+   * @return
+   */
+  def awardingCertificate(): View = {
+    val batchId = getLongId("batch")
+    val batch = entityDao.get(classOf[GraduateBatch], batchId)
+    val squadIds = getLongIds("squad")
+    val query = OqlBuilder.from(classOf[Graduate].getName, "g")
+      .where("g.graduateOn =:graduateOn", batch.graduateOn) //按照毕业日期进行查询，有可能学位授予日期会晚于这个日期
+    query.where("g.diplomaNo is not null")
+    query.join("g.std.state.squad", "adc")
+    query.where("adc.id in(:classIds)", squadIds)
+    put("graduates", entityDao.search(query))
     forward()
   }
 

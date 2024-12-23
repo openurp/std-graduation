@@ -146,7 +146,6 @@ class CertificateAction extends ActionSupport, EntityAction[Graduate], ProjectSu
     forward()
   }
 
-
   /** 班级材料归档
    *
    * @return

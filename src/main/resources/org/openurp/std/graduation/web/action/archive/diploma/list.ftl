@@ -4,6 +4,9 @@
   [@b.gridbar]
     bar.addItem("学生签收表",action.multi('signature',null,null,"_blank"));
     bar.addItem("班级签收表",action.method('stat',null,null,"_blank"));
+    [#if project.lle]
+    bar.addItem("学位授予通知书",action.multi('awardingCertificate',null,null,"_blank"));
+    [/#if]
     bar.addItem("签收表档案",action.method('squadArchives',null,null,"_blank"));
   [/@]
   [@b.row]
