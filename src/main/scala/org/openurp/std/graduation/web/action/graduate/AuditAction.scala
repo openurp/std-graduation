@@ -18,7 +18,7 @@
 package org.openurp.std.graduation.web.action.graduate
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.text.DateFormatter
+import org.beangle.commons.lang.text.{DateFormatter, TemporalFormatter}
 import org.beangle.commons.lang.{ClassLoaders, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
@@ -186,7 +186,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
 
   override protected def configExport(context: ExportContext): Unit = {
     super.configExport(context)
-    context.registerFormatter(classOf[LocalDate], new DateFormatter("yyyyMMdd"))
+    context.registerFormatter(classOf[LocalDate],new TemporalFormatter("yyyyMMdd"))
     context.extractor = new GraduateResultExtractor(entityDao)
   }
 

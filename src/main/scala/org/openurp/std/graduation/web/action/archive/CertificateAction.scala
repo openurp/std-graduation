@@ -56,10 +56,11 @@ class CertificateAction extends ActionSupport, EntityAction[Graduate], ProjectSu
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(batch, batches, Some(true), Some(false))
+    val rs = helper.statCertificate(batch, batches, Some(true), None)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateBatch", batch)
+    put("project", getProject)
     forward()
   }
 
@@ -118,7 +119,7 @@ class CertificateAction extends ActionSupport, EntityAction[Graduate], ProjectSu
     val batch = entityDao.get(classOf[GraduateBatch], batchId)
     val helper = new SquadStatHelper(entityDao)
     val batches = Strings.splitToInt(get("batchNo", ""))
-    val rs = helper.statCertificate(batch, batches, Some(true), Some(false))
+    val rs = helper.statCertificate(batch, batches, Some(true), None)
     put("squads", rs._1)
     put("squadMap", rs._2)
     put("graduateBatch", batch)

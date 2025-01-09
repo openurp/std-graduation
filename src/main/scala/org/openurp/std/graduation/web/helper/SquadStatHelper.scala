@@ -70,7 +70,7 @@ class SquadStatHelper(entityDao: EntityDao) {
   (collection.Seq[Squad], collection.Map[Squad, Any]) = {
     val query = OqlBuilder.from[Array[Any]](classOf[Graduate].getName, "g")
       .where("g.std.project=:project", batch.project)
-      .where("g.degreeAwardOn = :graduateOn", batch.graduateOn)
+      .where("g.graduateOn = :graduateOn", batch.graduateOn)
     query.where("g.diplomaNo is not null")
     if (batches.nonEmpty) {
       query.where(

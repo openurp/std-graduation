@@ -2,8 +2,8 @@
 [@b.head/]
 [@b.grid items=squads var="squad"]
   [@b.gridbar]
-    bar.addItem("学生签收表",action.multi('signature',null,null,"_blank"));
-    var m1 = bar.addMenu("班级签收表",action.method('stat',null,null,"_blank"));
+    bar.addItem("毕业生签收表",action.multi('signature',null,null,"_blank"));
+    var m1 = bar.addMenu([#if project.lle]"班主任签收表"[#else]"辅导员签收表"[/#if],action.method('stat',null,null,"_blank"));
     m1.addItem("证书明细",action.multi('detail',null,null,"_blank"));
     bar.addItem("延长生签收表",action.method('deferred',null,null,"_blank"));
     var m = bar.addMenu("资料归档..")

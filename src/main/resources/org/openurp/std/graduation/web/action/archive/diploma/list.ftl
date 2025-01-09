@@ -2,11 +2,14 @@
 [@b.head/]
 [@b.grid items=squads var="squad"]
   [@b.gridbar]
-    bar.addItem("学生签收表",action.multi('signature',null,null,"_blank"));
-    bar.addItem("班级签收表",action.method('stat',null,null,"_blank"));
+    bar.addItem("学位签收表",action.multi('signature',null,null,"_blank"));
     [#if project.lle]
+    bar.addItem("班主任签收表",action.method('stat',null,null,"_blank"));
     bar.addItem("学位授予通知书",action.multi('awardingCertificate',null,null,"_blank"));
+    [#else]
+    bar.addItem("辅导员签收表",action.method('stat',null,null,"_blank"));
     [/#if]
+
     bar.addItem("签收表档案",action.method('squadArchives',null,null,"_blank"));
   [/@]
   [@b.row]

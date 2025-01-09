@@ -19,17 +19,23 @@ package org.openurp.std.graduation.web.helper
 
 import org.beangle.commons.bean.DefaultPropertyExtractor
 import org.beangle.data.dao.EntityDao
+import org.openurp.base.std.model.Graduate
 import org.openurp.std.graduation.model.DegreeResult
 import org.openurp.std.info.model.Examinee
 
 class DegreeResultExtractor(entityDao: EntityDao) extends DefaultPropertyExtractor {
 
   override def get(bean: Object, name: String): Any = {
+    val dr =bean.asInstanceOf[DegreeResult]
     if (name == "examinee.code") {
-      val std = bean.asInstanceOf[DegreeResult].std
-      entityDao.findBy(classOf[Examinee], "std", std) match {
+      entityDao.findBy(classOf[Examinee], "std", dr.std) match {
         case Nil => ""
         case xs => xs.head.code
+      }
+    }else if(name=="graduate.diplomaNo"){
+      entityDao.findBy(classOf[Graduate], "std", dr.std).headOption match {
+        case None => ""
+        case Some(g) => g.diplomaNo.getOrElse("")
       }
     } else {
       super.get(bean, name)

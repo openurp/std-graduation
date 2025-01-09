@@ -28,12 +28,14 @@
 
         bar.addItem("导出",action.exportData("examinee.code:考生号,std.code:学号,std.name:姓名,"+
                "std.gender.name:性别,std.person.birthday:出生日期,std.person.code:身份证号,"+
+               "std.person.politicalStatus.code:政治面貌代码,std.person.politicalStatus.name:政治面貌,std.person.nation.code:民族代码,"+
+               "std.person.nation.name:民族,"+
                "std.state.grade.code:年级,std.state.campus.name:校区,std.level.name:培养层次,std.studyType.name:学习形式,"+
                "std.state.department.name:院系,std.state.major.name:专业,std.state.direction.name:方向,"+
                "std.state.squad.code:班级代码,std.state.squad.name:班级名称,std.duration:学制,"+
                "std.studyOn:入学日期,std.graduateOn:预计毕业日期,std.state.status.name:学籍状态,"+
                "std.state.squad.mentor.name:辅导员,std.state.squad.master.name:班主任,passed:是否通过," +
-               "degree.name:拟授予学位,passedItems:通过明细,failedItems:不通过明细",
+               "degree.name:拟授予学位,graduate.diplomaNo:学位证书编号,passedItems:通过明细,failedItems:不通过明细",
                 null,'fileName=学位审核结果'));
       [/@]
     [@b.row]

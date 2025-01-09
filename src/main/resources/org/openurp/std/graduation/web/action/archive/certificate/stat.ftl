@@ -1,5 +1,10 @@
 [#ftl]
 [@b.head/]
+<style>
+@page{
+   size: landscape;
+}
+</style>
 <div class="container">
    <H4 width="95%" align="center" style="margin-bottom:5px">${graduateBatch.graduateOn?string('YYYY')}年${graduateBatch.graduateOn?string('MM')}月毕业证书签收表</H4>
    <table class="grid-table" align="center" style="border:1px">
