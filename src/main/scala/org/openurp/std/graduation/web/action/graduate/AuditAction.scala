@@ -151,7 +151,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
       val data = Collections.newMap[String, Object]
       data.put("result", result.educationResult)
       data.put("std", result.std)
-      data.put("studyOn", dateFormater.format(result.std.studyOn))
+      data.put("studyOn", dateFormater.format(result.std.beginOn))
       data.put("graduateOn", dateFormater.format(result.std.graduateOn))
       result.std.person.birthday foreach { b =>
         data.put("birthday", dateFormater.format(b))

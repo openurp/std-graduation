@@ -17,13 +17,8 @@
 
 package org.openurp.std.graduation.web.helper
 
-import org.beangle.doc.docx.DocHelper
+import org.beangle.doc.docx.DocTemplate
 import org.openurp.std.graduation.model.DegreeApply
-
-import java.io.ByteArrayOutputStream
-import java.net.URL
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 object DegreeDocHelper {
 
@@ -31,6 +26,6 @@ object DegreeDocHelper {
     val data = ApplyDataConvertor.convert(apply)
     //@see ResourceVersionLoader
     val url = this.getClass.getResource("/org/openurp/std/graduation/degree/degree_apply.docx")
-    DocHelper.toDoc(url, data)
+    DocTemplate.process(url, data)
   }
 }

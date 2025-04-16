@@ -14,7 +14,7 @@
    <tr>
       <td class="title">所在学院</td><td>${std.state.department.name}</td>
       <td class="title">专业/方向</td><td>${(std.state.major.name)!} ${(std.state.direction.name)!}</td>
-      <td class="title">入学时间</td><td>${(std.studyOn?string("yyyy年MM月dd日"))!}</td>
+      <td class="title">入学时间</td><td>${(std.beginOn?string("yyyy年MM月dd日"))!}</td>
       <td class="title">毕业时间</td><td>${std.graduateOn?string("yyyy年MM月dd日")}</td>
    </tr>
    <tr>

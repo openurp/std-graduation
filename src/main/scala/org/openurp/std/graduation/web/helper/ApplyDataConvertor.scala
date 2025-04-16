@@ -57,7 +57,7 @@ object ApplyDataConvertor {
 
     val formatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
 
-    data.put("studyOn", std.studyOn.format(formatter))
+    data.put("studyOn", std.beginOn.format(formatter))
     data.put("graduateOn", apply.batch.graduateOn.format(formatter))
 
     val formatter2 = DateTimeFormatter.ofPattern("yyyy 年 M 月 d 日")
