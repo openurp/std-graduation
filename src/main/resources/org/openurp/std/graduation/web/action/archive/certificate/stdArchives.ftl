@@ -61,7 +61,7 @@
        [/#list]
        [#assign archiveNo =archiveNo +1]
      [/#if]
-     [#list squads as adc]
+     [#list squads?sort_by("code") as adc]
        [#assign arList = res[adc.id?string]?sort_by(["std","code"])]
        <tr>
          <td>${archiveNo}</td>
