@@ -24,11 +24,11 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std graduation"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-graduation/index.html"))
 
-val apiVer = "0.42.0"
-val starterVer = "0.3.54"
-val baseVer = "0.4.48"
-val eduCoreVer = "0.3.8"
-val stdCoreVer = "0.0.17"
+val apiVer = "0.44.0"
+val starterVer = "0.3.58"
+val baseVer = "0.4.51-SNAPSHOT"
+val eduCoreVer = "0.3.11"
+val stdCoreVer = "0.0.20"
 
 val openurp_edu_api = "org.openurp.edu" % "openurp-edu-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
