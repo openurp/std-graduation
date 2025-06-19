@@ -20,9 +20,9 @@ package org.openurp.std.graduation.web.action.degree
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
 import org.beangle.webmvc.annotation.ignore
-import org.beangle.webmvc.view.View
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
 import org.beangle.webmvc.support.helper.QueryHelper
+import org.beangle.webmvc.view.View
 import org.openurp.base.model.Project
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.graduation.model.{DegreeApply, GraduateBatch}
@@ -78,6 +78,7 @@ class ApplyAuditAction extends RestfulAction[DegreeApply], ExportSupport[DegreeA
     val sorted = items.toBuffer.sortWith((x, y) => x.std.code.compare(y.std.code) < 0)
     import scala.jdk.javaapi.CollectionConverters.*
     val applies = sorted.map(x => asJava(ApplyDataConvertor.convert(x)))
+    logger.info(s"export ${applies.size} degree applies to excel.")
     context.put("school", getProject.school.name)
     context.put("applies", applies)
   }

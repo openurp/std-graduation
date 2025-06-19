@@ -18,7 +18,7 @@
 package org.openurp.std.graduation.web.action.graduate
 
 import org.beangle.commons.collection.Collections
-import org.beangle.commons.lang.text.{DateFormatter, TemporalFormatter}
+import org.beangle.commons.lang.text.TemporalFormatter
 import org.beangle.commons.lang.{ClassLoaders, Strings}
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.doc.transfer.exporter.ExportContext
@@ -40,8 +40,6 @@ import org.openurp.std.info.model.Examinee
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util
-import java.util.List
 
 /** 管理部门毕业审核
  */
@@ -123,11 +121,13 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
    *
    * @return
    */
-  def removeDeferred(): View = {
+  def removeError(): View = {
+    val batch = entityDao.get(classOf[GraduateBatch], getLongId("result.batch"))
     val query = OqlBuilder.from(classOf[GraduateResult], "result")
-    query.where("result.batch.id=:batchId", getLongId("result.batch"))
+    query.where("result.batch=:batch", batch)
     query.where("result.published = false")
-    val results = entityDao.search(query).filter(x => x.std.graduateOn.isAfter(x.batch.graduateOn.plusDays(30)))
+    query.where("result.std.registed != true or not(:now between result.std.graduateOn and result.std.endOn)", batch.graduateOn)
+    val results = entityDao.search(query)
     entityDao.remove(results)
     redirect("search", s"删除了${results.size}个学生的审核结果")
   }
@@ -186,7 +186,7 @@ class AuditAction extends RestfulAction[GraduateResult], ProjectSupport, ExportS
 
   override protected def configExport(context: ExportContext): Unit = {
     super.configExport(context)
-    context.registerFormatter(classOf[LocalDate],new TemporalFormatter("yyyyMMdd"))
+    context.registerFormatter(classOf[LocalDate], new TemporalFormatter("yyyyMMdd"))
     context.extractor = new GraduateResultExtractor(entityDao)
   }
 

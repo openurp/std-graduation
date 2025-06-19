@@ -16,7 +16,7 @@
         var menu4 = bar.addMenu("学生名单", null);
         menu4.addItem("初始化名单", action.method("init","按照毕业日期初始化名单？"));
         menu4.addItem("添加学生(按学号)", "addStudents()");
-        menu4.addItem("移除延期学生", action.method("removeDeferred","按照毕业日期移出延期学生？"));
+        menu4.addItem("移除错误学生", action.method("removeError","按照毕业日期移出学生？"));
         menu4.addItem("移除学生", action.multi("remove","确定删除选中学生的审核结果?"));
 
         var menu3 = bar.addMenu("自动审核", action.multi('audit'));

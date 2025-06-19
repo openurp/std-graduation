@@ -37,6 +37,8 @@ val openurp_base_tag = "org.openurp.base" % "openurp-base-tag" % baseVer
 val openurp_edu_core = "org.openurp.edu" % "openurp-edu-core" % eduCoreVer
 val openurp_std_core = "org.openurp.std" % "openurp-std-core" % stdCoreVer
 
+val beangle_doc_excel = "org.beangle.doc" % "beangle-doc-excel" % "0.4.14"
+
 lazy val root = (project in file("."))
   .enablePlugins(WarPlugin, TomcatPlugin)
   .settings(
@@ -45,6 +47,6 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(openurp_edu_api, openurp_std_api, beangle_ems_app),
     libraryDependencies ++= Seq(openurp_stater_web, openurp_base_tag),
     libraryDependencies ++= Seq(openurp_edu_core, openurp_std_core),
-    libraryDependencies ++= Seq(beangle_doc_docx)
+    libraryDependencies ++= Seq(beangle_doc_docx, beangle_doc_excel)
   )
 
