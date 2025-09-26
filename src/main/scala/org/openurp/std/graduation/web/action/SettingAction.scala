@@ -54,7 +54,9 @@ class SettingAction extends RestfulAction[AuditSetting], ProjectSupport {
   }
 
   override def search(): View = {
-    val settings = entityDao.search(getQueryBuilder)
+    val query = getQueryBuilder
+    query.where("setting.project=:project", getProject)
+    val settings = entityDao.search(query)
     val grules = Collections.newMap[AuditSetting, Iterable[Rule]]
     val drules = Collections.newMap[AuditSetting, Iterable[Rule]]
     settings foreach { setting =>
