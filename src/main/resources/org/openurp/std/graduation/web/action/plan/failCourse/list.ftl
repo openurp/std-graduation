@@ -30,7 +30,7 @@
       [@b.col title="课程类别" property="groupResult.courseType.name" width="15%"/]
       [@b.col title="成绩" property="scores" width="6%"/]
       [@b.col title="备注" property="remark" style="text-align:left;padding-left:7px;"]
-        <div style="font-size:0.8em" class="text-ellipsis">${(result.remark!"")?replace("\n","<br>")}</div>
+        <div style="font-size:0.8em" class="text-ellipsis" title="${result.remark!}">${(result.remark!"")?replace("\n","<br>")}</div>
       [/@]
     [/@]
   [/@]
